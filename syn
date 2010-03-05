@@ -1,0 +1,114 @@
+#!/usr/bin/env python
+
+from optparse import OptionParser
+import Syn
+import sys
+import os
+
+def isset(var):
+	try: var
+	except NameError:
+		return False
+	return True
+
+usage = "usage: %prog [options] arg1 arg2"
+
+parser = OptionParser(usage=usage)
+
+parser.add_option(
+	"-v",
+	"--verbose",
+
+	action  = "count",
+	dest    = "verbose",
+	default = 0,
+	help    = "Verbose Messages from BOS. Call more then once for more fun"
+)
+
+parser.add_option(
+	"-s",
+	"--setup",
+	action    = "store",
+	type      = "string",
+	default   = "",
+	dest      = "setup_path",
+        help      = "Extract and setup the package"
+)
+
+parser.add_option(
+        "-c",
+        "--configure",
+
+        action  = "store_true",
+        dest    = "config",
+        default = False,
+        help    = "Configure the package"
+)
+
+parser.add_option(
+        "-b",
+        "--build",
+
+        action  = "store_true",
+        dest    = "build",
+        default = False,
+        help    = "Build ( make ) the package"
+)
+
+parser.add_option(
+        "-p",
+        "--package",
+
+        action  = "store_true",
+        dest    = "package",
+        default = False,
+        help    = "Build ( make ) the binary package"
+)
+
+parser.add_option(
+        "-t",
+        "--template",
+
+        action  = "store_true",
+        dest    = "template",
+        default = False,
+        help    = "Create a template to distribute"
+)
+
+parser.add_option(
+	"-a",
+	"--auto",
+	action    = "store",
+	type      = "string",
+	default   = "",
+	dest      = "automagic_path",
+        help      = "Automake the package"
+)
+
+(options, args) = parser.parse_args()
+Syn.SynGlobals.VERBOSE_LEVEL = options.verbose
+
+bos = Syn.SynManager()
+
+if options.automagic_path != "": # FIX ME, MOTHERFUDGER
+	bos.setup   ( options.automagic_path )
+	bos.config  ()
+	bos.build   ()
+	bos.template()
+	bos.package ()
+
+if options.setup_path != "":
+	bos.setup( options.setup_path )
+
+if options.config:
+	bos.config()
+
+if options.package:
+	bos.package()
+
+if options.build:
+	bos.build()
+
+if options.template:
+	bos.template()
+
