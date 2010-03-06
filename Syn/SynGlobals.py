@@ -2,6 +2,7 @@ import commands
 import os
 import tarfile
 import shutil
+import json
 from Syn.SynStore import SynStore
 
 SYN_VERSION     = 1
@@ -213,6 +214,15 @@ def getPackageName():
 		name = b.data[u"Name"]
 		note( 3, "name    = " + name )
 		return name
+
+def getPackageMetadata( path ):
+	try:
+		data = json.load(path)
+		return data
+
+	except IOError:
+		failToRead()
+
 
 def getPackageVID():
 	b = SynStore()

@@ -244,7 +244,7 @@ class SynManager:
 		os.chdir( Syn.SynGlobals.SYN_METAFOLDER )
 		Syn.SynGlobals.note( 3, "I am at this dir:  " + os.getcwd() )
 
-		path = name + "-" + vers + "." + Syn.SynGlobals.SYN_TOKEN
+		path = name + "-" + vers + "~" + Syn.SynGlobals.SYN_TOKEN + "." + Syn.SynGlobals.SYN_TOKEN
 
 		archive = tarfile.open( path, mode='w:gz' )
 		archive.add( Syn.SynGlobals.SYN_PACK_F, "root", recursive=True )
@@ -281,3 +281,20 @@ class SynManager:
 			return;
 		Syn.SynGlobals.postTemplate()
 		Syn.SynGlobals.noteGood( "Template Finished!" )
+
+	def install( self, path ):
+		tar = tarfile.open( path, "r:gz")
+		member_info = tar.getmember( Syn.SynGlobals.SYN_METAFILE )
+		if member_info != None:
+			f = tar.extractfile(member_info)
+			read = Syn.SynGlobals.getPackageMetadata( f )
+			vid  = read["Version"]
+			name = read["Name"]
+			Syn.SynGlobals.note( 1, "Installing " + name + ", version " + vid )
+
+			
+
+		tar.close()
+		Syn.SynGlobals.noteGood( "Install Finished!" )
+
+

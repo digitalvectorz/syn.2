@@ -85,6 +85,16 @@ parser.add_option(
         help      = "Automake the package"
 )
 
+parser.add_option(
+	"-i",
+	"--install",
+	action    = "store",
+	type      = "string",
+	default   = "",
+	dest      = "install_path",
+        help      = "Install a .syn package"
+)
+
 (options, args) = parser.parse_args()
 Syn.SynGlobals.VERBOSE_LEVEL = options.verbose
 
@@ -112,3 +122,5 @@ if options.build:
 if options.template:
 	bos.template()
 
+if options.install_path != "": # FIX ME, MOTHERFUDGER
+	bos.install( options.install_path )
