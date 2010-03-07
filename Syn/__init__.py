@@ -205,53 +205,56 @@ class SynManager:
 
 	def package( self ):
 		Syn.SynGlobals.prePackage()
-		stage_dir = Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_PACK_F
-		flags = "DESTDIR=" + stage_dir
 
-		if not os.path.exists( stage_dir ):
-			Syn.SynGlobals.createDir( stage_dir )
-		else:
-			Syn.SynGlobals.noteBad( "" )
-			Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
-			Syn.SynGlobals.noteBad( "|                       Package Failed to Create!                        |" )
-			Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
-			Syn.SynGlobals.noteBad( "  * Running the Makefile shat." )
-			Syn.SynGlobals.noteBad( "  * Make sure it can use DESTDIR. This should not be run root." )
-			Syn.SynGlobals.noteBad( "" )
-			return;
-		self.synStore.setInfo( "./" + Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_METAFILE, "PackStartTime", time.time()   )
-		if not Syn.SynGlobals.runRules( "pack" ):
-			path = "Makefile" # check for make
-			if not os.path.exists( path ):
+
+		if not Syn.SynGlobals.runRules( "package" ):
+			stage_dir = Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_PACK_F
+			flags = "DESTDIR=" + stage_dir
+
+			if not os.path.exists( stage_dir ):
+				Syn.SynGlobals.createDir( stage_dir )
+			else:
 				Syn.SynGlobals.noteBad( "" )
 				Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
-				Syn.SynGlobals.noteBad( "|                     Makefile is not Found! This sucks!                 |" )
+				Syn.SynGlobals.noteBad( "|                       Package Failed to Create!                        |" )
 				Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
-				Syn.SynGlobals.noteBad( "  * This package might not need a make." )
-				Syn.SynGlobals.noteBad( "  * Try rolling your own build method. Look into hooks. ( rules section )" )
+				Syn.SynGlobals.noteBad( "  * Running the Makefile shat." )
+				Syn.SynGlobals.noteBad( "  * Make sure it can use DESTDIR. This should not be run root." )
 				Syn.SynGlobals.noteBad( "" )
 				return;
-			else:
-				Syn.SynGlobals.note( 1, "Running the makefile" )
-				path = "make install" # We checked for "Makefile"
-				if not Syn.SynGlobals.runCommand( path + " " + flags, "pack" ):
+			self.synStore.setInfo( "./" + Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_METAFILE, "PackStartTime", time.time()   )
+			if not Syn.SynGlobals.runRules( "pack" ):
+				path = "Makefile" # check for make
+				if not os.path.exists( path ):
 					Syn.SynGlobals.noteBad( "" )
 					Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
-					Syn.SynGlobals.noteBad( "|                      Packing this app blew a hard one                  |" )
+					Syn.SynGlobals.noteBad( "|                     Makefile is not Found! This sucks!                 |" )
 					Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
-					Syn.SynGlobals.noteBad( "  * Running the Makefile shat." )
-					Syn.SynGlobals.noteBad( "  * Make sure it can use DESTDIR. This should not be run root." )
+					Syn.SynGlobals.noteBad( "  * This package might not need a make." )
+					Syn.SynGlobals.noteBad( "  * Try rolling your own build method. Look into hooks. ( rules section )" )
 					Syn.SynGlobals.noteBad( "" )
 					return;
 				else:
-					self.synStore.setInfo( "./" + Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_METAFILE, "Packtype", "Distrub" )
-		else:
-			Syn.SynGlobals.note( 1, "Rules make finished." )
-			self.synStore.setInfo( "./" + Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_METAFILE, "Packtype", "Rules" )
-
+					Syn.SynGlobals.note( 1, "Running the makefile" )
+					path = "make install" # We checked for "Makefile"
+					if not Syn.SynGlobals.runCommand( path + " " + flags, "pack" ):
+						Syn.SynGlobals.noteBad( "" )
+						Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
+						Syn.SynGlobals.noteBad( "|                      Packing this app blew a hard one                  |" )
+						Syn.SynGlobals.noteBad( "+------------------------------------------------------------------------+" )
+						Syn.SynGlobals.noteBad( "  * Running the Makefile shat." )
+						Syn.SynGlobals.noteBad( "  * Make sure it can use DESTDIR. This should not be run root." )
+						Syn.SynGlobals.noteBad( "" )
+						return;
+					else:
+						self.synStore.setInfo( "./" + Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_METAFILE, "Packtype", "Distrub" )
+			else:
+				Syn.SynGlobals.note( 1, "Rules make finished." )
+				self.synStore.setInfo( "./" + Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_METAFILE, "Packtype", "Rules" )
+	
 		name = Syn.SynGlobals.getPackageName()
 		vers = Syn.SynGlobals.getPackageVID()
-
+	
 		os.chdir( Syn.SynGlobals.SYN_METAFOLDER )
 		Syn.SynGlobals.note( 3, "I am at this dir:  " + os.getcwd() )
 
@@ -265,6 +268,7 @@ class SynManager:
 
 		Syn.SynGlobals.postPackage()
 		self.synStore.setInfo( "./" + Syn.SynGlobals.SYN_METAFOLDER + "/" + Syn.SynGlobals.SYN_METAFILE, "PackTime", time.time()   )
+
 		Syn.SynGlobals.noteGood( "Package Finished!" )
 
 	def template( self ):
@@ -337,7 +341,7 @@ class SynManager:
 
 			install_path += "root/"
 
-			link_path = "/syn/fake-rootski/"
+			link_path = "/"
 
 			if os.path.exists( install_path ):
 				Syn.SynGlobals.note(3, "OK. Root exists. Whuut! " + install_path )
