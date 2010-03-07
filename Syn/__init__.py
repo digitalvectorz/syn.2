@@ -45,6 +45,7 @@ class SynManager:
 			return
 
 		if Syn.SynGlobals.dirExists( ExpectedExtract ):
+
 			Syn.SynGlobals.note( 3, "Directory extracted just right." )
 			os.chdir( ExpectedExtract )
 
@@ -63,6 +64,17 @@ class SynManager:
 					Syn.SynGlobals.createDir( f )
 
 				Syn.SynGlobals.noteGood( "Extracted and setup. Looking nice." )
+
+				root = "../../"
+
+				for foo in os.listdir(root):
+					idz = os.path.splitext( foo )
+					if idz[1] == ".patch":
+						Syn.SynGlobals.note( 3, "I found a patch! Adding it in! ( " + foo + " )" )
+						shutil.copy( root + foo, Syn.SynGlobals.SYN_PATCH_F )
+						Syn.SynGlobals.note( 3, "Marking that patches exist. " +  Syn.SynGlobals.SYN_PATCH_E )
+						open(Syn.SynGlobals.SYN_PATCH_E, 'w').close()
+
 
 				if Syn.SynGlobals.importConfig( "./" + Syn.SynGlobals.SYN_CONFIG ):
 
