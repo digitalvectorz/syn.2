@@ -335,9 +335,9 @@ class SynManager:
 			Syn.SynGlobals.note(3, "ID = " + name )
 			Syn.SynGlobals.note(3, "VD = " + vid )
 
-			install_path += "root"
+			install_path += "root/"
 
-			link_path = "/"
+			link_path = "/syn/fake-rootski/"
 
 			if os.path.exists( install_path ):
 				Syn.SynGlobals.note(3, "OK. Root exists. Whuut! " + install_path )
@@ -346,8 +346,11 @@ class SynManager:
 				for root, dirs, files in os.walk( "." ): # rel paths ftw
 					Syn.SynGlobals.note(4, "processing " + root )
 					for f in files:
-						Syn.SynGlobals.note(4, "linking " + f )
-						os.symlink( root + f, link_path + root + f )
+						Syn.SynGlobals.note(4, "linking " + root + f + " to " + link_path + root + f )
+						if not os.path.exists( link_path + root ):
+							Syn.SynGlobals.note(4, "no dir yet. creatking " + link_path + root )
+							Syn.SynGlobals.createDir( link_path + root )
+						os.symlink( install_path + root + "/" + f, link_path + root + "/" + f )
 			else:
 				Syn.SynGlobals.noteBad( "No root, what kind of fucking .syn file is that?" )
 		else:
