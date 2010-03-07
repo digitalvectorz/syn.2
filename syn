@@ -95,6 +95,16 @@ parser.add_option(
         help      = "Install a .syn package"
 )
 
+parser.add_option(
+	"-l",
+	"--link",
+	action    = "store",
+	type      = "string",
+	default   = "",
+	dest      = "link_path",
+        help      = "Link a package into the OS"
+)
+
 (options, args) = parser.parse_args()
 Syn.SynGlobals.VERBOSE_LEVEL = options.verbose
 
@@ -125,6 +135,13 @@ if options.template:
 if options.install_path != "": # FIX ME, MOTHERFUDGER
 	try:
 		bos.install( options.install_path )
+	except OSError:
+		print "You need access to the install path! Gainroot!"
+
+if options.link_path != "": # FIX ME, MOTHERFUDGER
+	try:
+		name, version = options.link_path.split( '-' )
+		bos.link( name, version )
 	except OSError:
 		print "You need access to the install path! Gainroot!"
 

@@ -70,11 +70,10 @@ class SynManager:
 				for foo in os.listdir(root):
 					idz = os.path.splitext( foo )
 					if idz[1] == ".patch":
-						Syn.SynGlobals.note( 3, "I found a patch! Adding it in! ( " + foo + " )" )
+						Syn.SynGlobals.note( 2, "I found a patch! Adding it in! ( " + foo + " )" )
 						shutil.copy( root + foo, Syn.SynGlobals.SYN_PATCH_F )
 						Syn.SynGlobals.note( 3, "Marking that patches exist. " +  Syn.SynGlobals.SYN_PATCH_E )
 						open(Syn.SynGlobals.SYN_PATCH_E, 'w').close()
-
 
 				if Syn.SynGlobals.importConfig( "./" + Syn.SynGlobals.SYN_CONFIG ):
 
@@ -329,4 +328,28 @@ class SynManager:
 		Syn.SynGlobals.noteGood( "Install Finished!" )
 
 
+	def link( self, name, vid ):
+		install_path = Syn.SynGlobals.SYN_ROOT + "/" + name + "/" + vid + "/"
+		if os.path.exists( install_path ):
+			Syn.SynGlobals.note(3, "OK. Package exists. Let's do dis." )
+			Syn.SynGlobals.note(3, "ID = " + name )
+			Syn.SynGlobals.note(3, "VD = " + vid )
+
+			install_path += "root"
+
+			link_path = "/"
+
+			if os.path.exists( install_path ):
+				Syn.SynGlobals.note(3, "OK. Root exists. Whuut! " + install_path )
+				os.chdir( install_path )
+
+				for root, dirs, files in os.walk( "." ): # rel paths ftw
+					Syn.SynGlobals.note(4, "processing " + root )
+					for f in files:
+						Syn.SynGlobals.note(4, "linking " + f )
+						os.symlink( root + f, link_path + root + f )
+			else:
+				Syn.SynGlobals.noteBad( "No root, what kind of fucking .syn file is that?" )
+		else:
+			Syn.SynGlobals.noteBad( "Install the package first, dummy!" )
 

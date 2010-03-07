@@ -13,6 +13,10 @@ SYN_METAFOLDER  = SYN_TOKEN
 
 SYN_ROOT        = "/" + SYN_TOKEN
 
+SYN_INSTALLED   = "installed"
+SYN_LINKED      = "linked"
+
+
 SYN_METAFILE    = "metadata.synm"
 SYN_CONFIG      = "build.sync"
 
