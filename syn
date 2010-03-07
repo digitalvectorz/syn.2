@@ -123,4 +123,8 @@ if options.template:
 	bos.template()
 
 if options.install_path != "": # FIX ME, MOTHERFUDGER
-	bos.install( options.install_path )
+	try:
+		bos.install( options.install_path )
+	except OSError:
+		print "You need access to the install path! Gainroot!"
+

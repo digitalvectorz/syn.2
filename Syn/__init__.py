@@ -61,8 +61,8 @@ class SynManager:
 				for f in Syn.SynGlobals.SYN_FOLDERS:
 					Syn.SynGlobals.note( 3, "Creating dir: " + f )
 					Syn.SynGlobals.createDir( f )
-				Syn.SynGlobals.noteGood( "Extracted and setup. Looking nice." )
 
+				Syn.SynGlobals.noteGood( "Extracted and setup. Looking nice." )
 
 				if Syn.SynGlobals.importConfig( "./" + Syn.SynGlobals.SYN_CONFIG ):
 
@@ -244,7 +244,7 @@ class SynManager:
 		os.chdir( Syn.SynGlobals.SYN_METAFOLDER )
 		Syn.SynGlobals.note( 3, "I am at this dir:  " + os.getcwd() )
 
-		path = name + "-" + vers + "~" + Syn.SynGlobals.SYN_TOKEN + "." + Syn.SynGlobals.SYN_TOKEN
+		path = name + "-" + vers + "." + Syn.SynGlobals.SYN_TOKEN
 
 		archive = tarfile.open( path, mode='w:gz' )
 		archive.add( Syn.SynGlobals.SYN_PACK_F, "root", recursive=True )
@@ -292,9 +292,29 @@ class SynManager:
 			name = read["Name"]
 			Syn.SynGlobals.note( 1, "Installing " + name + ", version " + vid )
 
-			
+			install_path = Syn.SynGlobals.SYN_ROOT + "/" + name + "/" + vid + "/"
+
+			if not os.path.exists( Syn.SynGlobals.SYN_ROOT ):
+				Syn.SynGlobals.noteBad( "Whoh! You don't have a package root! Crap!" )
+				Syn.SynGlobals.noteBad( "Path Expected: " + Syn.SynGlobals.SYN_ROOT )
+				return
+
+			if not os.path.exists( Syn.SynGlobals.SYN_ROOT + "/" + name ):
+				Syn.SynGlobals.note( 3, "Fist package of type " + name + ", making it's root" )
+				Syn.SynGlobals.createDir( Syn.SynGlobals.SYN_ROOT + "/" + name )
+				Syn.SynGlobals.note( 3, "Directory Created" )
+
+			if os.path.exists( install_path ):
+				# Oh FFFFFFFFFFFUUUUUUUUUUUU
+				Syn.SynGlobals.noteBad( "Not installing. Already installed!" )
+			else:
+				Syn.SynGlobals.note(3, "Installing to " + install_path )
+				Syn.SynGlobals.note( 3, "Directory Created" )
+
+				tar.extractall( install_path )
 
 		tar.close()
 		Syn.SynGlobals.noteGood( "Install Finished!" )
+
 
 
