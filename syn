@@ -1,147 +1,15 @@
 #!/usr/bin/env python
 
-from optparse import OptionParser
 import Syn
-import sys
+from Syn import output, setup, constants, tools
 import os
 
-def isset(var):
-	try: var
-	except NameError:
-		return False
-	return True
+try:
+	dirz = setup.importFromURL( "http://ftp.gnu.org/gnu/bash/bash-3.2.tar.gz" )
 
-usage = "usage: %prog [options] arg1 arg2"
+	if dirz:
+		print "Downloaded everything to `" + dirz + "`"
 
-parser = OptionParser(usage=usage)
-
-parser.add_option(
-	"-v",
-	"--verbose",
-
-	action  = "count",
-	dest    = "verbose",
-	default = 0,
-	help    = "Verbose Messages from BOS. Call more then once for more fun"
-)
-
-parser.add_option(
-	"-s",
-	"--setup",
-	action    = "store",
-	type      = "string",
-	default   = "",
-	dest      = "setup_path",
-        help      = "Extract and setup the package"
-)
-
-parser.add_option(
-        "-c",
-        "--configure",
-
-        action  = "store_true",
-        dest    = "config",
-        default = False,
-        help    = "Configure the package"
-)
-
-parser.add_option(
-        "-b",
-        "--build",
-
-        action  = "store_true",
-        dest    = "build",
-        default = False,
-        help    = "Build ( make ) the package"
-)
-
-parser.add_option(
-        "-p",
-        "--package",
-
-        action  = "store_true",
-        dest    = "package",
-        default = False,
-        help    = "Build ( make ) the binary package"
-)
-
-parser.add_option(
-        "-t",
-        "--template",
-
-        action  = "store_true",
-        dest    = "template",
-        default = False,
-        help    = "Create a template to distribute"
-)
-
-parser.add_option(
-	"-a",
-	"--auto",
-	action    = "store",
-	type      = "string",
-	default   = "",
-	dest      = "automagic_path",
-        help      = "Automake the package"
-)
-
-parser.add_option(
-	"-i",
-	"--install",
-	action    = "store",
-	type      = "string",
-	default   = "",
-	dest      = "install_path",
-        help      = "Install a .syn package"
-)
-
-parser.add_option(
-	"-l",
-	"--link",
-	action    = "store",
-	type      = "string",
-	default   = "",
-	dest      = "link_path",
-        help      = "Link a package into the OS"
-)
-
-(options, args) = parser.parse_args()
-Syn.SynGlobals.VERBOSE_LEVEL = options.verbose
-
-bos = Syn.SynManager()
-
-if options.automagic_path != "": # FIX ME, MOTHERFUDGER
-	bos.setup   ( options.automagic_path )
-	bos.config  ()
-	bos.build   ()
-	bos.template()
-	bos.package ()
-
-if options.setup_path != "":
-	bos.setup( options.setup_path )
-
-if options.config:
-	bos.config()
-
-if options.package:
-	bos.package()
-
-if options.build:
-	bos.build()
-
-if options.template:
-	bos.template()
-
-if options.install_path != "": # FIX ME, MOTHERFUDGER
-	try:
-		bos.install( options.install_path )
-	except OSError:
-		print "You need access to the install path! Gainroot!"
-
-if options.link_path != "": # FIX ME, MOTHERFUDGER
-	try:
-		name, version = options.link_path.split( '-' )
-		bos.link( name, version )
-	except OSError:
-		print "You need access to the install path! Gainroot!"
-
+except KeyboardInterrupt:
+	print ""
+	print "  Jesus, calm down. Don't be a dick about it."
