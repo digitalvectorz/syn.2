@@ -4,7 +4,7 @@ package template etc.
 """
 
 import Syn
-from Syn import output, tools, constants
+from Syn import output, tools, constants, errors
 
 import os, shutil
 import urllib2, urllib
@@ -57,6 +57,13 @@ def importFromURL( path ):
 
 		hackeroverride = False
 		emailoverride  = False
+		
+		try:
+			foo = rcdata['hacker']
+			foo = rcdata['email']
+		except KeyError:
+			output.error( "We have a crap conf file", 3 )
+			raise errors.ShittyConfException(rcfile + " sucks ass. Failed loading hacker / email")
 
 		if rcdata['hacker']:
 			hacker = rcdata['hacker']
@@ -133,6 +140,12 @@ def importFromURL( path ):
 					db = tools.filedb( rcfile )
 					db.read()
 					rcinfo = db.data
+
+					try:
+						foo = rcinfo['env']
+					except KeyError:
+						output.error( "We have a crap conf file", 3 )
+						raise ShittyConfException(rcfile + " sucks ass. Failed loading ENV")
 
 					db = tools.filedb(constants.SYN_TEMPLATE_DIR + constants.SYN_BUILD_INFO  )
 					db.init()

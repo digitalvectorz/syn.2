@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import Syn
-from Syn import output, setup, constants, tools
+from Syn import output, setup, constants, tools, errors
 import os
 
 try:
@@ -13,3 +13,7 @@ try:
 except KeyboardInterrupt:
 	print ""
 	print "  Jesus, calm down. Don't be a dick about it."
+except errors.ShittyConfException as e:
+	print ""
+	print "Make sure you have a synrc file that is, you know, right."
+	print "Error: " + str(e)

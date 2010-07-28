@@ -1,0 +1,22 @@
+{
+	"hacker" : "paultag",
+	"email"  : "paultag@gmail.com",
+
+	"env" : {
+		"VERSION_MODIFIER" : "syn",
+		"CFLAGS"           : "-Os -march=i686",
+		"CCFLAGS"          : "-Os -march=i686",
+		"CXXFLAGS"         : "-Os -march=i686"
+	},
+	"ConfigFlags" : {
+		"usrpfx"    : "--prefix=\/usr",
+		"confdr"    : "--sysconfdir=\/etc",
+		"execdr"    : "--libexecdir=\/usr\/lib",
+		"vardir"    : "--localstatedir=\/var",
+		"mandir"    : "--mandir=\/usr\/share\/man",
+		"infdir"    : "--infodir=\/usr\/share\/info"
+	},
+	"BuildFlags" : {
+		"flag" : "-j3"
+	}
+}
