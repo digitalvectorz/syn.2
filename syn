@@ -25,13 +25,25 @@ attrs = [
 	"version",
 	"description",
 	"homepage",
+	"maintainer",
+	"deps",
 ]
 
 try:
 	if options.info != None:
 		meta = syn.metadump(options.info)
 		for attr in attrs:
-			print attr + ":	" + str(meta[attr])
+			if isinstance(meta[attr], list):
+				print attr + ":	"
+				for x in meta[attr]:
+					print "  " + str(x)
+			elif isinstance(meta[attr], dict):
+				print attr + ":	"
+				for x in meta[attr]:
+					print "  " + str(meta[attr][x])
+			else:
+				print attr + ":	" + meta[attr]
+
 except NameError:
 	pass
 
