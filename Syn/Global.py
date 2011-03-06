@@ -8,6 +8,7 @@ ARCHIVE_FS_ROOT = "syn"       # build stage folder
 BUILD_FS_ROOT   = "build"     # build build folder
 
 INSTALL_ROOT_PATH = "/syn/"   # install all packages here
+SYNDB             = INSTALL_ROOT_PATH + "pkgdb.ron"
 
 BIN_PKG         = "syn"       # pkg-1.0.BIN_PKG
 

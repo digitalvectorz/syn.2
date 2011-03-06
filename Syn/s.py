@@ -97,7 +97,7 @@ def metadump(filezor):
 	return metadata
 
 def build(pack_loc):
-	Syn.build.build(pack_loc)
+	return Syn.build.build(pack_loc)
 
 def install(pathorig):
-	Syn.install.install(pathorig)
+	return Syn.install.install(pathorig)

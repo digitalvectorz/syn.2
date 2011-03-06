@@ -9,15 +9,16 @@ from optparse import OptionParser
 import Syn.common as c
 import Syn.Global as g
 import Syn.s      as syn
+import Syn.db
 import Syn.log
 import os.path
 
 parser = OptionParser()
 
-parser.add_option("-n", "--info",    dest  = "info",    help = "Get metadata info on the package")
-parser.add_option("-b", "--build",   dest  = "build",   help = "Build the syn source file")
-parser.add_option("-i", "--install", dest  = "install", help = "Install a syn binary file")
-
+parser.add_option("-n", "--info",     dest  = "info",     help = "Get metadata info on the package")
+parser.add_option("-b", "--build",    dest  = "build",    help = "Build the syn source file")
+parser.add_option("-i", "--install",  dest  = "install",  help = "Install a syn binary file")
+parser.add_option("-d", "--database", dest  = "database", help = "Query the Database")
 
 (options, args) = parser.parse_args()
 
@@ -61,7 +62,21 @@ try:
 			execd = True
 		except NameError as e:
 			print e
+except NameError:
+	pass
 
+try:
+	if options.database != None:
+		try:
+			database = Syn.db.loadCanonicalDB()
+			package, version = c.processFullID(options.database)
+			state = database.queryState(package, version)
+			Syn.log.l(
+				Syn.log.MESSAGE, "%s:	%s" % ( options.database, str(state) )
+			)
+			execd = True
+		except NameError as e:
+			print e
 except NameError:
 	pass
 
