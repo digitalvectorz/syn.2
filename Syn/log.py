@@ -11,7 +11,9 @@ LOG      = 4
 VERBOSE  = 5
 PEDANTIC = 6
 
-DEFAULT  = MESSAGE
+DEFAULT   = MESSAGE
+VERBOSITY = DEFAULT
 
 def l(level, msg):
-	print "[l] (" + str(level) + "): " + msg;
+	if level <= VERBOSITY:
+		print "[l] (" + str(level) + "): " + msg;
