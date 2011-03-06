@@ -16,3 +16,5 @@ BUILD        = "BUILD"
 STAGE        = "STAGE"
 
 DESTDIR      = "S_DESTDIR"
+
+ARCHIVE_FS_ROOT = "syn"

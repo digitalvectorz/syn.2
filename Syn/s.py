@@ -78,16 +78,19 @@ def build():
 	os.chdir(root)
 
 	pack_loc = c.getTempLocation()
-
-	putenv(g.DESTDIR, pack_loc)
 	c.createWorkDir(pack_loc)
+
+	putenv(g.DESTDIR, pack_loc  + "/" + g.ARCHIVE_FS_ROOT)
+	c.mkdir(pack_loc + "/" + g.ARCHIVE_FS_ROOT)
 
 	Syn.log.l(Syn.log.MESSAGE, "Start Configure")
 	os.system(script + " configure")
 	Syn.log.l(Syn.log.MESSAGE, "End Configure")
+
 	Syn.log.l(Syn.log.MESSAGE, "Start Build")
 	os.system(script + " build")
 	Syn.log.l(Syn.log.MESSAGE, "End Build")
+
 	Syn.log.l(Syn.log.MESSAGE, "Start Stage")
 	os.system(script + " stage")
 	Syn.log.l(Syn.log.MESSAGE, "End Stage")
