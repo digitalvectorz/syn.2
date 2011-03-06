@@ -4,19 +4,4 @@ import Syn.s      as syn
 import Syn.common as c
 import Syn.Global as g
 
-pack_loc = c.getTempLocation()
-c.createWorkDir(pack_loc)
-syn.targetTarball("bash-4.2.syn.tar.gz")
-
-syn.extractSource(pack_loc)
-pkg, ver = syn.getVersion()
-
-c.cd(pkg + "-" + ver)
-syn.targetTarball(pkg + "-" + ver + ".tar.gz")
-
-syn.extractSource(pack_loc, pkg + "-" + ver)
-
-c.cd(pkg + "-" + ver)
-syn.build(pack_loc)
-
-# c.removeWorkDir()
+syn.buildFromSource("bash-4.2.syn.tar.gz")

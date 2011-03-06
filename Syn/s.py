@@ -7,6 +7,9 @@ import Syn.Global as g
 import os.path
 import os
 
+import shutil
+import tarfile
+
 import json
 
 def targetTarball(tar):
@@ -64,14 +67,50 @@ def writeMetafile(frobernate):
 
 def extractSource(pack_loc, path="."):
 	global _tb
-
 	try:
 		c.cd(pack_loc)
-
 		root = _tb.getRootFolder()		
 		_tb.extractall(path)
 	except NameError as e:
 		raise NameError("Package not set")
+
+def tarup( directory, outputname ):
+	tarball_target = tarfile.open(outputname, "w|gz")
+	tarball_target.add(directory)
+	tarball_target.close()
+
+def buildFromSource(pkg_path):
+	pack_loc = c.getTempLocation()
+	pop_location = os.path.abspath(os.getcwd())
+
+	c.createWorkDir(pack_loc)
+	targetTarball(pkg_path)
+	extractSource(pack_loc)
+	pkg, ver = getVersion()
+	c.cd(pkg + "-" + ver)
+	targetTarball(pkg + "-" + ver + ".tar.gz")
+	extractSource(pack_loc, pkg + "-" + ver)
+	c.cd(pkg + "-" + ver)
+	build(pack_loc)
+	c.cd(pack_loc)
+
+	shutil.copyfile(
+		pack_loc + pkg + "-" + ver + "/" + g.SYN_BUILDDIR + "/" + g.SYN_BUILDDIR_META,
+		pack_loc + g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
+	)
+	tarup(
+		g.ARCHIVE_FS_ROOT,
+		pack_loc + "/" + pkg + "-" + ver + "." + g.BIN_PKG
+	)
+
+	shutil.rmtree(pack_loc + g.ARCHIVE_FS_ROOT)
+	shutil.rmtree(pack_loc + pkg + "-" + ver)
+	shutil.move(
+		pack_loc + "/" + pkg + "-" + ver + "." + g.BIN_PKG,
+		pop_location
+	)
+
+	c.removeWorkDir()
 
 def build(pack_loc):
 	build_config = loadBuildConfigFile()
