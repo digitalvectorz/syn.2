@@ -9,7 +9,7 @@ import os
 
 import json
 
-def targetUpstream(tar):
+def targetTarball(tar):
 	global _tb
 	global _tb_dir
 
@@ -38,18 +38,61 @@ def template():
 	else:
 		Syn.common.mkdir("synd")
 
-def loadBuildConfigFile():
-	f = open(g.SYN_BUILDDIR + g.SYN_BUILDDIR_CONFIG)
-	conf_file = f.read()
-	return json.loads(conf_file)
-
 def putenv(key, value):
 	Syn.log.l(Syn.log.VERBOSE, "%s = %s" % (key, value))
 	# print "export " + key + "=\"" + value + "\""
 	os.putenv(key, value)
 
-def build():
+def loadBuildConfigFile():
+	f = open(g.SYN_BUILDDIR + g.SYN_BUILDDIR_CONFIG)
+	conf_file = f.read()
+	return json.loads(conf_file)
+
+def loadMetaConfigFile():
+	f = open(g.SYN_BUILDDIR + g.SYN_BUILDDIR_META)
+	conf_file = f.read()
+	return json.loads(conf_file)
+
+def writeMetafile(frobernate):
+	output = json.dumps(
+		frobernate,
+		sort_keys=True,
+		indent=4 )
+	f = open(g.SYN_BUILDDIR + g.SYN_BUILDDIR_META, 'w')
+	f.write(output)
+	f.close()
+
+def extractSource(pack_loc, path="."):
+	global _tb
+
+	try:
+		c.cd(pack_loc)
+
+		root = _tb.getRootFolder()		
+		_tb.extractall(path)
+	except NameError as e:
+		raise NameError("Package not set")
+
+def build(pack_loc):
 	build_config = loadBuildConfigFile()
+	meta_config  = loadMetaConfigFile()
+
+	package, version = getVersion()
+
+	pkg = meta_config['package']
+	ver = meta_config['version']
+
+	if package != pkg:
+		raise KeyError("Package metafile does not match tarball!")
+	else:
+		Syn.log.l(Syn.log.VERBOSE, "package matches conf")
+
+	if version != ver:
+		Syn.log.l(Syn.log.MESSAGE, "Version does not match. Resetting metafile's conf")
+		meta_config['version'] = version
+		writeMetafile(meta_config)
+	else:
+		Syn.log.l(Syn.log.VERBOSE, "Version matches conf")
 
 	config_flag_string = ""
 	build_flag_string  = ""
@@ -77,9 +120,6 @@ def build():
 	root = _tb.getRootFolder()
 	os.chdir(root)
 
-	pack_loc = c.getTempLocation()
-	c.createWorkDir(pack_loc)
-
 	putenv(g.DESTDIR, pack_loc  + "/" + g.ARCHIVE_FS_ROOT)
 	c.mkdir(pack_loc + "/" + g.ARCHIVE_FS_ROOT)
 
@@ -94,6 +134,4 @@ def build():
 	Syn.log.l(Syn.log.MESSAGE, "Start Stage")
 	os.system(script + " stage")
 	Syn.log.l(Syn.log.MESSAGE, "End Stage")
-
-	# c.removeWorkDir()
 

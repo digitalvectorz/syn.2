@@ -1,8 +1,22 @@
 #!/usr/bin/env python
 
-import Syn.s as syn
+import Syn.s      as syn
+import Syn.common as c
+import Syn.Global as g
 
-syn.targetUpstream("bash-4.2.tar.gz")
+pack_loc = c.getTempLocation()
+c.createWorkDir(pack_loc)
+syn.targetTarball("bash-4.2.syn.tar.gz")
 
-syn.build()
+syn.extractSource(pack_loc)
+pkg, ver = syn.getVersion()
 
+c.cd(pkg + "-" + ver)
+syn.targetTarball(pkg + "-" + ver + ".tar.gz")
+
+syn.extractSource(pack_loc, pkg + "-" + ver)
+
+c.cd(pkg + "-" + ver)
+syn.build(pack_loc)
+
+# c.removeWorkDir()

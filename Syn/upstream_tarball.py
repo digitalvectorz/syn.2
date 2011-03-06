@@ -22,3 +22,16 @@ class us_tb:
 			return root_folder
 		except AttributeError as e:
 			raise ValueError("No tarball!")
+
+	def extractall(self, path = "."):
+		try:
+			self.tarball_target.extractall(path)
+		except ValueError as e:
+			raise ValueError("No tarball!")
+
+	def close(self):
+		try:
+			self.tarball_target.close()
+		except ValueError as e:
+			raise ValueError("No tarball!")
+
