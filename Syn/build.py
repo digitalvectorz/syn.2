@@ -103,7 +103,7 @@ def buildFromSource(pkg_path):
 			pack_loc + g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
 		)
 
-		files = Syn.s.md5sumwd(pack_loc + "/" + g.ARCHIVE_FS_ROOT)
+		files = Syn.s.md5sumwd(g.ARCHIVE_FS_ROOT)
 
 		output = json.dumps(
 			files,
