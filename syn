@@ -5,5 +5,15 @@ import Syn.common as c
 import Syn.Global as g
 
 
-syn.metadump("bash-4.2.syn")
+meta = syn.metadump("bash-4.2.syn")
+attrs = [
+	"package",
+	"version",
+	"description",
+	"homepage",
+];
+
+for attr in attrs:
+	print attr + ": " + str(meta[attr])
+
 #syn.buildFromSource("bash-4.2.syn.tar.gz")

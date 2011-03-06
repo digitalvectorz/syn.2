@@ -120,11 +120,11 @@ def metadump(filezor):
 	if tarinfo.isfile():
 		meta = tarball_target.extractfile(metafile)
 		metadata = json.loads(meta.read())
-		print metadata
 	else:
 		raise KeyError("Bum file")
 
 	tarball_target.close()
+	return metadata
 
 def build(pack_loc):
 	build_config = loadBuildConfigFile()
