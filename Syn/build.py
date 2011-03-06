@@ -1,5 +1,6 @@
 import Syn.common as c
 import Syn.Global as g
+import Syn.install
 import Syn.s
 import Syn.log
 

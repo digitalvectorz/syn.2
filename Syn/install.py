@@ -1,0 +1,45 @@
+import os.path
+import Syn.log
+import Syn.Global as g
+import Syn.common as c
+import Syn.s
+
+import shutil
+
+def install(pathorig):
+	path = os.path.abspath(pathorig)
+
+	meta = Syn.s.metadump(path)
+	pkg = meta['package']
+	ver = meta['version']
+
+	Syn.log.l(Syn.log.MESSAGE, "Installing version %s of %s" % ( ver, pkg ))
+	c.cd(g.INSTALL_ROOT_PATH)
+
+	archive = Syn.tarball.us_tb()
+	archive.target(path)
+
+	try:
+		c.mkdir(pkg)
+	except OSError:
+		Syn.log.l(Syn.log.PEDANTIC, "we have a version of bash installed")
+		pass # it's ok to have a pkg
+		#      installed. just not ver
+	c.cd(pkg)
+
+	try:
+		c.mkdir(ver)
+	except OSError:
+		Syn.log.l(Syn.log.CRITICAL, "Package exists in syn!")
+		Syn.log.l(Syn.log.CRITICAL, "Can *NOT* continue!")
+		return -1
+	c.cd(ver)
+
+	archive.extractall(".")
+
+	shutil.move(
+		g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META,
+		g.SYN_XTRACT_META,
+	)
+
+	return 0

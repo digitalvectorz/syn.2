@@ -3,8 +3,6 @@
 # GNU GPL-3+, 2011
 #
 
-import Syn.Global
-import Syn.log
 
 import time
 import os
