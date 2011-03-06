@@ -3,7 +3,7 @@
 # GNU GPL-3+, 2011
 #
 
-import Syn.upstream_tarball
+import Syn.tarball
 import Syn.common as c
 import Syn.Global as g
 import Syn.log
@@ -17,7 +17,7 @@ def targetTarball(tar):
 	global _tb
 	global _tb_dir
 	_tb_dir = os.path.dirname(os.path.abspath(tar))
-	_tb = Syn.upstream_tarball.us_tb()
+	_tb = Syn.tarball.us_tb()
 	_tb.target(tar);
 
 def getVersion():
