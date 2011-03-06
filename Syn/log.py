@@ -1,3 +1,8 @@
+#
+# Copyright (c) Paul Tagliamonte
+# GNU GPL-3+, 2011
+#
+
 CRITICAL = 0
 HIGH     = 1
 MESSAGE  = 2

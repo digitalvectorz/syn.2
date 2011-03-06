@@ -1,3 +1,8 @@
+#
+# Copyright (c) Paul Tagliamonte
+# GNU GPL-3+, 2011
+#
+
 import Syn.log
 import tarfile
 import os.path

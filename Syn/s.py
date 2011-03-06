@@ -1,29 +1,27 @@
-import Syn.upstream_tarball
-import Syn.log
+#
+# Copyright (c) Paul Tagliamonte
+# GNU GPL-3+, 2011
+#
 
+import Syn.upstream_tarball
 import Syn.common as c
 import Syn.Global as g
-
-import os.path
-import os
-
-import shutil
+import Syn.log
 import tarfile
-
+import os.path
+import shutil
 import json
+import os
 
 def targetTarball(tar):
 	global _tb
 	global _tb_dir
-
 	_tb_dir = os.path.dirname(os.path.abspath(tar))
-
 	_tb = Syn.upstream_tarball.us_tb()
 	_tb.target(tar);
 
 def getVersion():
 	global _tb
-
 	try:
 		root = _tb.getRootFolder()
 		package, version = Syn.common.processFullID(root)
@@ -59,8 +57,9 @@ def loadMetaConfigFile():
 def writeMetafile(frobernate):
 	output = json.dumps(
 		frobernate,
-		sort_keys=True,
-		indent=4 )
+		sort_keys = True,
+		indent    = 4
+	)
 	f = open(g.SYN_BUILDDIR + g.SYN_BUILDDIR_META, 'w')
 	f.write(output)
 	f.close()
@@ -116,30 +115,24 @@ def metadump(filezor):
 	tarball_target = tarfile.open(filezor, "r")
 	metafile = g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
 	tarinfo = tarball_target.getmember(metafile)
-
 	if tarinfo.isfile():
 		meta = tarball_target.extractfile(metafile)
 		metadata = json.loads(meta.read())
 	else:
 		raise KeyError("Bum file")
-
 	tarball_target.close()
 	return metadata
 
 def build(pack_loc):
 	build_config = loadBuildConfigFile()
 	meta_config  = loadMetaConfigFile()
-
 	package, version = getVersion()
-
 	pkg = meta_config['package']
 	ver = meta_config['version']
-
 	if package != pkg:
 		raise KeyError("Package metafile does not match tarball!")
 	else:
 		Syn.log.l(Syn.log.VERBOSE, "package matches conf")
-
 	if version != ver:
 		Syn.log.l(Syn.log.MESSAGE, "Version does not match. Resetting metafile's conf")
 		meta_config['version'] = version
