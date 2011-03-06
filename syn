@@ -14,6 +14,6 @@ attrs = [
 ];
 
 for attr in attrs:
-	print attr + ": " + str(meta[attr])
+	print attr + ":	" + str(meta[attr])
 
 #syn.buildFromSource("bash-4.2.syn.tar.gz")
