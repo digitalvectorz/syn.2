@@ -3,10 +3,22 @@
 # GNU GPL-3+, 2011
 #
 
+import Syn.Global
+import Syn.log
+
 import time
 import os
 
-import Syn.Global
+import Syn.tarball
+import Syn.Global as g
+import Syn.log
+
+import tarfile
+import os.path
+import shutil
+import json
+import os
+
 
 def processFullID(identifier):
 	split = identifier.index("-")

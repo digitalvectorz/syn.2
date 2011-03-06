@@ -7,6 +7,7 @@ import Syn.tarball
 import Syn.common as c
 import Syn.Global as g
 import Syn.log
+
 import tarfile
 import os.path
 import shutil
@@ -181,3 +182,39 @@ def build(pack_loc):
 	os.system(script + " stage")
 	Syn.log.l(Syn.log.MESSAGE, "End Stage")
 
+def install(pathorig):
+	path = os.path.abspath(pathorig)
+
+	meta = metadump(path)
+	pkg = meta['package']
+	ver = meta['version']
+
+	Syn.log.l(Syn.log.MESSAGE, "Installing version %s of %s" % ( ver, pkg ))
+	c.cd(g.INSTALL_ROOT_PATH)
+
+	archive = Syn.tarball.us_tb()
+	archive.target(path)
+
+	try:
+		c.mkdir(pkg)
+	except OSError:
+		pass # it's ok to have a pkg
+		#      installed. just not ver
+	c.cd(pkg)
+
+	try:
+		c.mkdir(ver)
+	except OSError:
+		Syn.log.l(Syn.log.CRITICAL, "Package exists in syn!")
+		Syn.log.l(Syn.log.CRITICAL, "Can *NOT* continue!")
+		return -1
+	c.cd(ver)
+
+	archive.extractall(".")
+
+	shutil.move(
+		g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META,
+		g.SYN_XTRACT_META,
+	)
+
+	return 0

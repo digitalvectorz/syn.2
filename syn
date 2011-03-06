@@ -5,18 +5,24 @@
 #
 
 from optparse import OptionParser
+
 import Syn.common as c
 import Syn.Global as g
 import Syn.s      as syn
 import Syn.log
+import os.path
 
 parser = OptionParser()
 
-parser.add_option("-i", "--info",
+parser.add_option("-n", "--info",
 	dest  = "info",  help = "Get metadata info on the package")
 
 parser.add_option("-b", "--build",
 	dest  = "build", help = "Build the syn source file")
+
+parser.add_option("-i", "--install",
+	dest  = "install", help = "Install a syn binary file")
+
 
 (options, args) = parser.parse_args()
 
@@ -52,4 +58,17 @@ try:
 		syn.buildFromSource(options.build)
 except NameError:
 	pass
+
+try:
+	if options.install != None:
+		if syn.install(options.install) != 0:
+			Syn.log.l(Syn.log.CRITICAL, "")
+			Syn.log.l(Syn.log.CRITICAL, "******")
+			Syn.log.l(Syn.log.CRITICAL, " FAILURE TO INSTALL")
+			Syn.log.l(Syn.log.CRITICAL, "******")
+			Syn.log.l(Syn.log.CRITICAL, "")
+		else:
+			Syn.log.l(Syn.log.MESSAGE, "Install went OK :)")
+except NameError as e:
+	print e
 
