@@ -95,7 +95,7 @@ def buildFromSource(pkg_path):
 	c.cd(pack_loc)
 
 	shutil.copyfile(
-		pack_loc + pkg + "-" + ver + "/" + g.SYN_BUILDDIR + "/" + g.SYN_BUILDDIR_META,
+		pack_loc + pkg + "-" + ver + "/" + g.SYN_BUILDDIR + g.SYN_BUILDDIR_META,
 		pack_loc + g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
 	)
 	tarup(
@@ -111,6 +111,20 @@ def buildFromSource(pkg_path):
 	)
 
 	c.removeWorkDir()
+
+def metadump(filezor):
+	tarball_target = tarfile.open(filezor, "r")
+	metafile = g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
+	tarinfo = tarball_target.getmember(metafile)
+
+	if tarinfo.isfile():
+		meta = tarball_target.extractfile(metafile)
+		metadata = json.loads(meta.read())
+		print metadata
+	else:
+		raise KeyError("Bum file")
+
+	tarball_target.close()
 
 def build(pack_loc):
 	build_config = loadBuildConfigFile()
