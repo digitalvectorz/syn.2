@@ -6,6 +6,7 @@
 import Syn.tarball
 import Syn.common as c
 import Syn.Global as g
+import Syn.build
 import Syn.log
 
 import tarfile
@@ -25,12 +26,13 @@ def getVersion():
 	global _tb
 	try:
 		root = _tb.getRootFolder()
-		package, version = Syn.common.processFullID(root)
-		Syn.log.l(Syn.log.VERBOSE, "Processing package   `%s'" % package)
-		Syn.log.l(Syn.log.VERBOSE, "Version processed as `%s'" % version)
-		return [package, version]
 	except NameError as e:
 		raise NameError("Package not set")
+
+	package, version = Syn.common.processFullID(root)
+	Syn.log.l(Syn.log.VERBOSE, "Processing package   `%s'" % package)
+	Syn.log.l(Syn.log.VERBOSE, "Version processed as `%s'" % version)
+	return [package, version]
 
 def template():
 	package, version = getVersion()
@@ -67,8 +69,8 @@ def writeMetafile(frobernate):
 
 def extractSource(pack_loc, path="."):
 	global _tb
+	c.cd(pack_loc)
 	try:
-		c.cd(pack_loc)
 		root = _tb.getRootFolder()		
 		_tb.extractall(path)
 	except NameError as e:
@@ -80,37 +82,7 @@ def tarup( directory, outputname ):
 	tarball_target.close()
 
 def buildFromSource(pkg_path):
-	pack_loc = c.getTempLocation()
-	pop_location = os.path.abspath(os.getcwd())
-
-	c.createWorkDir(pack_loc)
-	targetTarball(pkg_path)
-	extractSource(pack_loc)
-	pkg, ver = getVersion()
-	c.cd(pkg + "-" + ver)
-	targetTarball(pkg + "-" + ver + ".tar.gz")
-	extractSource(pack_loc, pkg + "-" + ver)
-	c.cd(pkg + "-" + ver)
-	build(pack_loc)
-	c.cd(pack_loc)
-
-	shutil.copyfile(
-		pack_loc + pkg + "-" + ver + "/" + g.SYN_BUILDDIR + g.SYN_BUILDDIR_META,
-		pack_loc + g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
-	)
-	tarup(
-		g.ARCHIVE_FS_ROOT,
-		pack_loc + "/" + pkg + "-" + ver + "." + g.BIN_PKG
-	)
-
-	shutil.rmtree(pack_loc + g.ARCHIVE_FS_ROOT)
-	shutil.rmtree(pack_loc + pkg + "-" + ver)
-	shutil.move(
-		pack_loc + "/" + pkg + "-" + ver + "." + g.BIN_PKG,
-		pop_location
-	)
-
-	c.removeWorkDir()
+	Syn.build.buildFromSource(pkg_path)
 
 def metadump(filezor):
 	tarball_target = tarfile.open(filezor, "r")
@@ -125,62 +97,7 @@ def metadump(filezor):
 	return metadata
 
 def build(pack_loc):
-	build_config = loadBuildConfigFile()
-	meta_config  = loadMetaConfigFile()
-	package, version = getVersion()
-	pkg = meta_config['package']
-	ver = meta_config['version']
-	if package != pkg:
-		raise KeyError("Package metafile does not match tarball!")
-	else:
-		Syn.log.l(Syn.log.VERBOSE, "package matches conf")
-	if version != ver:
-		Syn.log.l(Syn.log.MESSAGE, "Version does not match. Resetting metafile's conf")
-		meta_config['version'] = version
-		writeMetafile(meta_config)
-	else:
-		Syn.log.l(Syn.log.VERBOSE, "Version matches conf")
-
-	config_flag_string = ""
-	build_flag_string  = ""
-	stage_flag_string  = ""
-
-	for flag in build_config['ConfigFlags']:
-		config_flag_string += flag + " "
-
-	for flag in build_config['BuildFlags']:
-		build_flag_string += flag + " "
-
-	for flag in build_config['StageFlags']:
-		stage_flag_string += flag + " "
-
-	putenv(g.CONFIG_FLAGS, config_flag_string)
-	putenv(g.BUILD_FLAGS,  build_flag_string)
-	putenv(g.STAGE_FLAGS,  stage_flag_string)
-
-	putenv(g.CONFIG, build_config['configure'])
-	putenv(g.BUILD,  build_config['build'])
-	putenv(g.STAGE,  build_config['stage'])
-
-	script = os.path.abspath(g.SYN_BUILDDIR + g.SYN_BUILDDIR_SCRIPT)
-
-	root = _tb.getRootFolder()
-	os.chdir(root)
-
-	putenv(g.DESTDIR, pack_loc  + "/" + g.ARCHIVE_FS_ROOT)
-	c.mkdir(pack_loc + "/" + g.ARCHIVE_FS_ROOT)
-
-	Syn.log.l(Syn.log.MESSAGE, "Start Configure")
-	os.system(script + " configure")
-	Syn.log.l(Syn.log.MESSAGE, "End Configure")
-
-	Syn.log.l(Syn.log.MESSAGE, "Start Build")
-	os.system(script + " build")
-	Syn.log.l(Syn.log.MESSAGE, "End Build")
-
-	Syn.log.l(Syn.log.MESSAGE, "Start Stage")
-	os.system(script + " stage")
-	Syn.log.l(Syn.log.MESSAGE, "End Stage")
+	Syn.build.build(pack_loc)
 
 def install(pathorig):
 	path = os.path.abspath(pathorig)
@@ -198,6 +115,7 @@ def install(pathorig):
 	try:
 		c.mkdir(pkg)
 	except OSError:
+		Syn.log.l(Syn.log.PEDANTIC, "we have a version of bash installed")
 		pass # it's ok to have a pkg
 		#      installed. just not ver
 	c.cd(pkg)

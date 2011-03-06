@@ -47,6 +47,6 @@ def removeWorkDir():
 	os.rmdir(_CUR_WORK_DIR)
 
 def cd(work_dir):
-	Syn.log.l(Syn.log.PEDANTIC, "chdir to " + work_dir)
 	os.chdir(work_dir)
+	Syn.log.l(Syn.log.PEDANTIC, "chdir to " + work_dir)
 
