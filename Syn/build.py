@@ -9,6 +9,8 @@ import Syn.install
 import Syn.s
 import Syn.log
 
+import json
+
 import shutil
 import os
 
@@ -100,6 +102,19 @@ def buildFromSource(pkg_path):
 			pack_loc + pkg + "-" + ver + "/" + g.SYN_BUILDDIR + g.SYN_BUILDDIR_META,
 			pack_loc + g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
 		)
+
+		files = Syn.s.md5sumwd(pack_loc + "/" + g.ARCHIVE_FS_ROOT)
+
+		output = json.dumps(
+			files,
+			sort_keys = True,
+			indent    = 4
+		)
+
+		f = open(g.ARCHIVE_FS_ROOT + "/" + g.SYN_FILESUMS, 'w')
+		f.write(output)
+		f.close()
+
 		Syn.s.tarup(
 			g.ARCHIVE_FS_ROOT,
 			pack_loc + "/" + pkg + "-" + ver + "." + g.BIN_PKG

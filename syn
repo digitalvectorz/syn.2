@@ -33,69 +33,56 @@ attrs = [
 
 execd = False
 
-try:
-	if options.info != None:
-		try:
-			meta = syn.metadump(options.info)
-			for attr in attrs:
-				if isinstance(meta[attr], list):
-					print attr + ":	"
-					for x in meta[attr]:
-						print "  " + str(x)
-				elif isinstance(meta[attr], dict):
-					print attr + ":	"
-					for x in meta[attr]:
-						print "  " + str(meta[attr][x])
-				else:
-					print attr + ":	" + meta[attr]
-			execd = True
-		except NameError as e:
-			print e
-
-except NameError:
-	pass
-
-try:
-	if options.build != None:
-		try:
-			syn.buildFromSource(options.build)
-			execd = True
-		except NameError as e:
-			print e
-except NameError:
-	pass
-
-try:
-	if options.database != None:
-		try:
-			database = Syn.db.loadCanonicalDB()
-			package, version = c.processFullID(options.database)
-			state = database.queryState(package, version)
-			Syn.log.l(
-				Syn.log.MESSAGE, "%s:	%s" % ( options.database, str(state) )
-			)
-			execd = True
-		except NameError as e:
-			print e
-except NameError:
-	pass
-
-try:
-	if options.install != None:
-		try:
-			if syn.install(options.install) != 0:
-				Syn.log.l(Syn.log.CRITICAL, "")
-				Syn.log.l(Syn.log.CRITICAL, "******")
-				Syn.log.l(Syn.log.CRITICAL, " FAILURE TO INSTALL")
-				Syn.log.l(Syn.log.CRITICAL, "******")
-				Syn.log.l(Syn.log.CRITICAL, "")
+if hasattr(options, "info") and options.info != None:
+	try:
+		meta = syn.metadump(options.info)
+		for attr in attrs:
+			if isinstance(meta[attr], list):
+				print attr + ":	"
+				for x in meta[attr]:
+					print "  " + str(x)
+			elif isinstance(meta[attr], dict):
+				print attr + ":	"
+				for x in meta[attr]:
+					print "  " + str(meta[attr][x])
 			else:
-				Syn.log.l(Syn.log.MESSAGE, "Install went OK :)")
-			execd = True
-		except NameError as e:
-			print e
-except NameError as e:
-	pass
+				print attr + ":	" + meta[attr]
+		execd = True
+	except NameError as e:
+		print e
+
+if hasattr(options, "build") and options.build != None:
+	try:
+		syn.buildFromSource(options.build)
+		execd = True
+	except NameError as e:
+		print e
+
+if hasattr(options, "database") and options.database != None:
+	try:
+		database = Syn.db.loadCanonicalDB()
+		package, version = c.processFullID(options.database)
+		state = database.queryState(package, version)
+		Syn.log.l(
+			Syn.log.MESSAGE, "%s:	%s" % ( options.database, str(state) )
+		)
+		execd = True
+	except NameError as e:
+		print e
+
+if hasattr(options, "install") and options.install != None:
+	try:
+		if syn.install(options.install) != 0:
+			Syn.log.l(Syn.log.CRITICAL, "")
+			Syn.log.l(Syn.log.CRITICAL, "******")
+			Syn.log.l(Syn.log.CRITICAL, " FAILURE TO INSTALL")
+			Syn.log.l(Syn.log.CRITICAL, "******")
+			Syn.log.l(Syn.log.CRITICAL, "")
+		else:
+			Syn.log.l(Syn.log.MESSAGE, "Install went OK :)")
+		execd = True
+	except NameError as e:
+		print e
 
 if not execd:
 	Syn.log.l(Syn.log.CRITICAL, "Failure. Run with --help for usage help")

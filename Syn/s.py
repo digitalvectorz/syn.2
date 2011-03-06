@@ -3,6 +3,8 @@
 # GNU GPL-3+, 2011
 #
 
+import Syn.verification
+
 import Syn.tarball
 import Syn.common as c
 import Syn.Global as g
@@ -14,6 +16,7 @@ import os.path
 import shutil
 import json
 import os
+import os.path
 
 def targetTarball(tar):
 	global _tb
@@ -34,13 +37,18 @@ def getVersion():
 	Syn.log.l(Syn.log.VERBOSE, "Version processed as `%s'" % version)
 	return [package, version]
 
-def template():
-	package, version = getVersion()
-	Syn.common.cd(_tb_dir)
-	if os.path.exists("synd"):
-		raise IOError("Synd Exists!")
-	else:
-		Syn.common.mkdir("synd")
+def md5sumwd(check = os.getcwd()):
+	ret = {}
+	path = check # os.path.abspath(check)
+
+	for f in os.listdir(path):
+		if os.path.isdir(path + "/" + f):
+			dictret = md5sumwd(path + "/" + f)
+			for x in dictret:
+				ret[x] = dictret[x]
+		else:
+			ret[path + "/" + f] = Syn.verification.md5sum(path + "/" + f)
+	return ret
 
 def putenv(key, value):
 	Syn.log.l(Syn.log.VERBOSE, "%s = %s" % (key, value))

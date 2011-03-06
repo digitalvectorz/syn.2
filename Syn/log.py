@@ -12,7 +12,7 @@ VERBOSE  = 5
 PEDANTIC = 6
 
 DEFAULT   = MESSAGE
-VERBOSITY = DEFAULT
+VERBOSITY = PEDANTIC
 
 def l(level, msg):
 	if level <= VERBOSITY:
