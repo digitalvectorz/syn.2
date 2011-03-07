@@ -4,27 +4,39 @@
 #
 
 WORKDIR         = "/tmp/syn/" # where to unpack & build
-ARCHIVE_FS_ROOT = "syn"       # build stage folder
-BUILD_FS_ROOT   = "build"     # build build folder
+ARCHIVE_FS_ROOT = "syn/"      # binary package root
+BUILD_FS_ROOT   = "build/"    # build build folder
 
-INSTALL_ROOT_PATH = "/syn/"   # install all packages here
-SYNDB             = INSTALL_ROOT_PATH + "pkgdb.ron"
+INSTALL_ROOT_PATH = "/syn/"             # install all packages here
+SYNDB = INSTALL_ROOT_PATH + "pkgdb.ron" # "database"
 
-BIN_PKG         = "syn"       # pkg-1.0.BIN_PKG
-SRC_PKG         = "syn.tar.gz"# pkg-1.0.SRC_PKG
+SYN_BIN_PKG_XTN     = "syn"         # pkg-1.0.BIN_PKG
+SYN_SRC_PKG_XTN     = "syn.tar.gz"  # pkg-1.0.SRC_PKG
 
-DEFAULT_SYN   = "~/.syn/"
-DEFAULT_SYNRC = DEFAULT_SYN + "synrc"
-
-SYN_BUILDDIR        = "synd/"
+SYN_SRC_DIR         = "synd/"
 
 SYN_BUILDDIR_SCRIPT = "build"      # build "rules" file
 SYN_BUILDDIR_CONFIG = "buildrc"    # build config file (flags)
 SYN_BUILDDIR_META   = "meta"       # metafile (control file)
-SYN_XTRACT_META     = "metainf"    # metainf
-SYN_FILESUMS        = ".filesums"  # MD5 sums
-SYN_BINARY_META     = ".meta-syn"  # binary metafile package location
+SYN_BUILDDIR_MPKG   = "multipkg"   # multipkg file for more then one
+#                                    binary package
+
+SYN_SRC_LOAD_ON_LOAD = [
+	SYN_SRC_DIR + SYN_BUILDDIR_CONFIG,
+	SYN_SRC_DIR + SYN_BUILDDIR_META,
+	SYN_SRC_DIR + SYN_BUILDDIR_MPKG
+]
+
+SYN_BINARY_FILESUMS  = ".filesums"  # MD5 sums
+SYN_BINARY_META      = ".meta-syn"  # binary metafile package location
 #                                    (in the archive)
+
+SYN_BIN_LOAD_ON_LOAD = [
+	SYN_BINARY_FILESUMS,
+	SYN_BINARY_META
+]
+
+SYN_XTRACT_META      = "metainf"    # metainf in the filesystem
 
 CONFIG_FLAGS = "CONFIG_FLAGS"
 BUILD_FLAGS  = "BUILD_FLAGS"

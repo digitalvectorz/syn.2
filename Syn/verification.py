@@ -28,15 +28,4 @@ def md5sum(fname):
 		f.close()
 	return ret
 
-def md5sumtar(filezor):
-	tarball_target = tarfile.open(filezor, "r")
-	filelist = tarball_target.getmembers()
-	sumlist = {}
-
-	for tarinfo in filelist:
-		if tarinfo.isfile():
-			fd = tarball_target.extractfile(tarinfo)
-			md5 = sumfile(fd)
-			sumlist[tarinfo.name] = md5
-	return sumlist
 

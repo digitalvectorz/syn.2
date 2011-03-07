@@ -86,6 +86,7 @@ def build(pack_loc):
 
 def buildSourcePackage(pkg_loc):
 	c.cd(pkg_loc)
+
 	metainf = Syn.s.loadMetaConfigFile()
 	pkg = metainf['package']
 	ver = metainf['version']

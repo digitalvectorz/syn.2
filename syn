@@ -4,6 +4,14 @@
 # GNU GPL-3+, 2011
 #
 
+import Syn.tarball
+
+
+ar = Syn.tarball.archive("bash-4.2.syn.tar.gz")
+
+
+exit(0)
+
 from optparse import OptionParser
 
 import Syn.common as c
