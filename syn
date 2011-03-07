@@ -19,6 +19,7 @@ parser.add_option("-n", "--info",     dest  = "info",     help = "Get metadata i
 parser.add_option("-b", "--build",    dest  = "build",    help = "Build the syn source file")
 parser.add_option("-i", "--install",  dest  = "install",  help = "Install a syn binary file")
 parser.add_option("-d", "--database", dest  = "database", help = "Query the Database")
+parser.add_option("-v", "--verify",   dest  = "verify",   help = "Verify a tar archive")
 
 (options, args) = parser.parse_args()
 
@@ -57,6 +58,13 @@ if hasattr(options, "build") and options.build != None:
 		execd = True
 	except NameError as e:
 		print e
+
+
+
+if hasattr(options, "verify") and options.verify != None:
+	syn.verifyTar(options.verify)
+	execd = True
+
 
 if hasattr(options, "database") and options.database != None:
 	try:

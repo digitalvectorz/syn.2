@@ -104,6 +104,39 @@ def metadump(filezor):
 	tarball_target.close()
 	return metadata
 
+def loadVerificationFile(filezor):
+	tarball_target = tarfile.open(filezor, "r")
+	metafile = g.ARCHIVE_FS_ROOT + "/" + g.SYN_FILESUMS
+	tarinfo = tarball_target.getmember(metafile)
+	if tarinfo.isfile():
+		meta = tarball_target.extractfile(metafile)
+		metadata = json.loads(meta.read())
+	else:
+		raise KeyError("Bum file")
+	tarball_target.close()
+	return metadata
+
+def verifyTar(verify):
+	tar_info = Syn.verification.md5sumtar(verify)
+	del(tar_info[g.ARCHIVE_FS_ROOT + "/" + g.SYN_FILESUMS])
+
+	md5_info = loadVerificationFile(verify)	
+	delta = c.dict_diff(tar_info, md5_info)
+
+	errors = 0
+
+	for i in delta:
+		Syn.log.l(Syn.log.CRITICAL, i)
+		Syn.log.l(Syn.log.CRITICAL, " File shows:  %s" % md5_info[i])
+		Syn.log.l(Syn.log.CRITICAL, " Tar file is: %s" % tar_info[i])
+		errors += 1
+
+	Syn.log.l(Syn.log.MESSAGE, "" )
+	Syn.log.l(Syn.log.MESSAGE, "Total Errors: " + str(errors) )
+	Syn.log.l(Syn.log.MESSAGE, "" )
+
+	return errors
+
 def build(pack_loc):
 	return Syn.build.build(pack_loc)
 

@@ -21,7 +21,7 @@ SYN_BUILDDIR_SCRIPT = "build"      # build "rules" file
 SYN_BUILDDIR_CONFIG = "buildrc"    # build config file (flags)
 SYN_BUILDDIR_META   = "meta"       # metafile (control file)
 SYN_XTRACT_META     = "metainf"    # metainf
-SYN_FILESUMS        = "filesums"   # MD5 sums
+SYN_FILESUMS        = ".filesums"  # MD5 sums
 SYN_BINARY_META     = ".meta-syn"  # binary metafile package location
 #                                    (in the archive)
 
