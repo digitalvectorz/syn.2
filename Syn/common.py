@@ -18,10 +18,13 @@ import os
 
 
 def processFullID(identifier):
-	split = identifier.index("-")
-	package_id = identifier[:split]
-	version_id = identifier[split+1:]
-	return [ package_id, version_id ]
+	try:
+		split = identifier.index("-")
+		package_id = identifier[:split]
+		version_id = identifier[split+1:]
+		return [ package_id, version_id ]
+	except ValueError:
+		return [ identifier, None ]
 
 def getTempLocation():
 	timestamp = time.time()

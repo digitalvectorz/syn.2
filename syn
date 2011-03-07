@@ -15,11 +15,11 @@ import os.path
 
 parser = OptionParser()
 
-parser.add_option("-n", "--info",     dest  = "info",     help = "Get metadata info on the package")
-parser.add_option("-b", "--build",    dest  = "build",    help = "Build the syn source file")
-parser.add_option("-i", "--install",  dest  = "install",  help = "Install a syn binary file")
-parser.add_option("-d", "--database", dest  = "database", help = "Query the Database")
-parser.add_option("-v", "--verify",   dest  = "verify",   help = "Verify a tar archive")
+parser.add_option("-n", "--info",    dest  = "info",     help = "Get metadata info on the package")
+parser.add_option("-b", "--build",   dest  = "build",    help = "Build the syn source file")
+parser.add_option("-i", "--install", dest  = "install",  help = "Install a syn binary file")
+parser.add_option("-q", "--query",   dest  = "database", help = "Query the Database")
+parser.add_option("-v", "--verify",  dest  = "verify",   help = "Verify a tar archive")
 
 (options, args) = parser.parse_args()
 
@@ -59,12 +59,15 @@ if hasattr(options, "build") and options.build != None:
 	except NameError as e:
 		print e
 
-
-
 if hasattr(options, "verify") and options.verify != None:
-	syn.verifyTar(options.verify)
-	execd = True
+	errors = syn.verifyTar(options.verify)
 
+	if errors == 0:
+		Syn.log.l(Syn.log.CRITICAL, "No errors! Clean package sums.")
+	else:
+		Syn.log.l(Syn.log.CRITICAL, "Error! Package sums are invalid!")
+
+	execd = True
 
 if hasattr(options, "database") and options.database != None:
 	try:
@@ -80,14 +83,17 @@ if hasattr(options, "database") and options.database != None:
 
 if hasattr(options, "install") and options.install != None:
 	try:
-		if syn.install(options.install) != 0:
-			Syn.log.l(Syn.log.CRITICAL, "")
-			Syn.log.l(Syn.log.CRITICAL, "******")
-			Syn.log.l(Syn.log.CRITICAL, " FAILURE TO INSTALL")
-			Syn.log.l(Syn.log.CRITICAL, "******")
-			Syn.log.l(Syn.log.CRITICAL, "")
+		if syn.verifyTar(options.install) == 0:
+			if syn.install(options.install) != 0:
+				Syn.log.l(Syn.log.CRITICAL, "")
+				Syn.log.l(Syn.log.CRITICAL, " FAILURE TO INSTALL")
+				Syn.log.l(Syn.log.CRITICAL, "")
+			else:
+				Syn.log.l(Syn.log.MESSAGE, "Install went OK :)")
 		else:
-			Syn.log.l(Syn.log.MESSAGE, "Install went OK :)")
+			Syn.log.l(Syn.log.CRITICAL, "")
+			Syn.log.l(Syn.log.CRITICAL, " FAILURE TO VERIFY")
+			Syn.log.l(Syn.log.CRITICAL, "")
 		execd = True
 	except NameError as e:
 		print e
