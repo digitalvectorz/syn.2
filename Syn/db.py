@@ -15,6 +15,15 @@ REMOVED        = "R"
 BORKED         = "B"
 UNINSTALLED    = "U"
 
+HR_FMT = {
+	INSTALLED       : "Installed",
+	HALF_INSTALLED  : "Half-installed",
+	LINKED          : "Linked",
+	REMOVED         : "Removed",
+	BORKED          : "Borked",
+	UNINSTALLED     : "Uninstalled"
+}
+
 #
 # "package-n.m" : {
 #    "package" : package,
