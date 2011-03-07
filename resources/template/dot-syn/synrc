@@ -1,0 +1,10 @@
+{
+	"hacker" : "John Q. Hacker",
+	"email"  : "jhacker@domain.tld",
+
+	"env" : {
+		"CFLAGS"   : "-O2 -march=core2",
+		"CCFLAGS"  : "-O2 -march=core2",
+		"CXXFLAGS" : "-O2 -march=core2"
+	},
+}
