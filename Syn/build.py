@@ -11,6 +11,7 @@ import Syn.log
 
 import json
 
+import urllib
 import shutil
 import os
 
@@ -82,6 +83,32 @@ def build(pack_loc):
 		return 3
 
 	return 0
+
+def buildSourcePackage(pkg_loc):
+	c.cd(pkg_loc)
+	metainf = Syn.s.loadMetaConfigFile()
+	pkg = metainf['package']
+	ver = metainf['version']
+
+	Syn.log.l(Syn.log.VERBOSE, "Working on " + pkg + ", version " + ver)
+
+	if os.path.exists(pkg + "-" + ver + ".tar.gz"):
+		Syn.log.l(Syn.log.VERBOSE, "Tarball is checked out already")
+	else:
+		url = metainf['download']
+		Syn.log.l(Syn.log.HIGH, "Downloading package from " + url)
+		urllib.urlretrieve(url, "./" + pkg + "-" + ver + ".tar.gz")
+	if os.path.exists(pkg + "-" + ver + ".tar.gz"):
+		c.cd("..")
+		Syn.log.l(Syn.log.VERBOSE, "tar  " + "./" + pkg + "-" + ver)
+		Syn.log.l(Syn.log.VERBOSE, "into " + "./" + pkg + "-" + ver + "." + g.SRC_PKG)
+		Syn.s.tarup(
+			pkg + "-" + ver,
+			pkg + "-" + ver + "." + g.SRC_PKG
+		)
+	else:
+		Syn.log.l(Syn.log.CRITICAL, "Failed to get package! Damn!")
+		return -1
 
 def buildFromSource(pkg_path):
 	pack_loc = c.getTempLocation()

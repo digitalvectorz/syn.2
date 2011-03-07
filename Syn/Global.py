@@ -11,6 +11,7 @@ INSTALL_ROOT_PATH = "/syn/"   # install all packages here
 SYNDB             = INSTALL_ROOT_PATH + "pkgdb.ron"
 
 BIN_PKG         = "syn"       # pkg-1.0.BIN_PKG
+SRC_PKG         = "syn.tar.gz"# pkg-1.0.SRC_PKG
 
 DEFAULT_SYN   = "~/.syn/"
 DEFAULT_SYNRC = DEFAULT_SYN + "synrc"

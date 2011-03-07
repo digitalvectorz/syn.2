@@ -56,14 +56,25 @@ def putenv(key, value):
 	os.putenv(key, value)
 
 def loadBuildConfigFile():
+	Syn.log.l(Syn.log.VERBOSE, "Loading build config")
+	Syn.log.l(Syn.log.VERBOSE, "Opening" + g.SYN_BUILDDIR + g.SYN_BUILDDIR_CONFIG )
 	f = open(g.SYN_BUILDDIR + g.SYN_BUILDDIR_CONFIG)
+	Syn.log.l(Syn.log.VERBOSE, "File open")
 	conf_file = f.read()
-	return json.loads(conf_file)
+	#Syn.log.l(Syn.log.VERBOSE, "Read file " + conf_file)
+	config_json = json.loads(conf_file)
+ 	#Syn.log.l(Syn.log.VERBOSE, "str: " + str(config_json))
+	return config_json
 
 def loadMetaConfigFile():
 	f = open(g.SYN_BUILDDIR + g.SYN_BUILDDIR_META)
+	Syn.log.l(Syn.log.VERBOSE, "Opening " + g.SYN_BUILDDIR + g.SYN_BUILDDIR_CONFIG )
 	conf_file = f.read()
-	return json.loads(conf_file)
+	Syn.log.l(Syn.log.VERBOSE, "file read")
+	#Syn.log.l(Syn.log.VERBOSE, "read as: " + str(conf_file))
+	config_json = json.loads(conf_file)
+	#Syn.log.l(Syn.log.VERBOSE, "str: " + str(config_json))
+	return config_json
 
 def writeMetafile(frobernate):
 	output = json.dumps(
@@ -85,7 +96,9 @@ def extractSource(pack_loc, path="."):
 		raise NameError("Package not set")
 
 def tarup( directory, outputname ):
-	tarball_target = tarfile.open(outputname, "w|gz")
+	Syn.log.l(Syn.log.PEDANTIC,"Taring " + outputname)
+	tarball_target = tarfile.open(str(outputname), "w|gz")
+	Syn.log.l(Syn.log.PEDANTIC,"Adding " + directory)
 	tarball_target.add(directory)
 	tarball_target.close()
 
@@ -151,6 +164,9 @@ def verifyTar(verify):
 
 def build(pack_loc):
 	return Syn.build.build(pack_loc)
+
+def buildSourcePackage(pkg_loc):
+	return Syn.build.buildSourcePackage(pkg_loc)
 
 def install(pathorig):
 	return Syn.install.install(pathorig)

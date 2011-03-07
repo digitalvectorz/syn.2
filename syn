@@ -18,6 +18,7 @@ parser = OptionParser()
 parser.add_option("-n", "--info",    dest  = "info",     help = "Get metadata info on the package")
 parser.add_option("-b", "--build",   dest  = "build",    help = "Build the syn source file")
 parser.add_option("-i", "--install", dest  = "install",  help = "Install a syn binary file")
+parser.add_option("-s", "--source",  dest  = "source",   help = "Prepare a source package")
 parser.add_option("-q", "--query",   dest  = "database", help = "Query the Database")
 parser.add_option("-v", "--verify",  dest  = "verify",   help = "Verify a tar archive")
 
@@ -48,6 +49,13 @@ if hasattr(options, "info") and options.info != None:
 					print "  " + str(meta[attr][x])
 			else:
 				print attr + ":	" + meta[attr]
+		execd = True
+	except NameError as e:
+		print e
+
+if hasattr(options, "source") and options.source != None:
+	try:
+		syn.buildSourcePackage(options.source)
 		execd = True
 	except NameError as e:
 		print e
