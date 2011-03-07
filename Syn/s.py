@@ -123,12 +123,24 @@ def verifyTar(verify):
 	md5_info = loadVerificationFile(verify)	
 	delta = c.dict_diff(tar_info, md5_info)
 
+	Syn.log.l(Syn.log.PEDANTIC, "Processed " + str(len(md5_info)) + " files in the map.")
+	Syn.log.l(Syn.log.PEDANTIC, "Processed " + str(len(tar_info)) + " files in the tarball.")
+
 	errors = 0
 
 	for i in delta:
 		Syn.log.l(Syn.log.CRITICAL, i)
-		Syn.log.l(Syn.log.CRITICAL, " File shows:  %s" % md5_info[i])
-		Syn.log.l(Syn.log.CRITICAL, " Tar file is: %s" % tar_info[i])
+
+		if i in tar_info:
+			Syn.log.l(Syn.log.CRITICAL, " Tar file is: %s" % tar_info[i])
+		else:
+			Syn.log.l(Syn.log.CRITICAL, " Tarball does not have this file!")
+
+		if i in md5_info:
+			Syn.log.l(Syn.log.CRITICAL, " File shows:  %s" % md5_info[i])
+		else:
+			Syn.log.l(Syn.log.CRITICAL, " Map does not have this file!!!! WARNING!")
+
 		errors += 1
 
 	Syn.log.l(Syn.log.MESSAGE, "" )
