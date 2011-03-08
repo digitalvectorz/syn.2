@@ -18,6 +18,8 @@ def buildSourcePackage(package):
 	ar = t.archive(package)
 	klass = ar.getClass()
 
+	pop = os.path.abspath(os.getcwd())
+
 	if klass != t.SOURCE:
 		l.l(l.CRITICAL,"Archive is not a source package")
 		return -1
@@ -28,7 +30,13 @@ def buildSourcePackage(package):
 	c.mkdir(build_root)
 	c.cd(build_root)
 
-	return_value = Syn.build.build(ar)
+	try:
+		build = Syn.build.build(ar)
+		c.cp(build, pop + "/" + build)
+
+	except BuildFailureException as e:
+		l.l(l.CRITICAL,"Failure to build!")
+		l.l(l.CRITICAL,str(e))
 
 	c.rmdir(build_root)
 	return return_value

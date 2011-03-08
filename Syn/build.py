@@ -87,7 +87,7 @@ def package(metainf):
 		t.BINARY
 	)
 
-	c.cp( b_pth, "/tmp/syn/" + b_pth )
+	return b_pth
 
 def build(ar):
 	l.l(l.PEDANTIC,"Extracting archive")
@@ -131,8 +131,10 @@ def build(ar):
 		l.l(l.CRITICAL,"*****")
 		l.l(l.CRITICAL,"FTBFS DETECTED!!!")
 		l.l(l.CRITICAL,"*****")
-		return -1
+		raise BuildFailureException("FTBFS")
 
 	c.cd("..")
 
-	package(metainf)
+	binary = package(metainf)
+
+	return binary
