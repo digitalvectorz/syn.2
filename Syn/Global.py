@@ -11,8 +11,9 @@ ARCHIVE_FS_ROOT = ARCHIVE_FS_ROOT_NOSLASH + "/"
 
 BUILD_FS_ROOT   = "build/"    # build build folder
 
-INSTALL_ROOT_PATH = "/syn/"             # install all packages here
-SYNDB = INSTALL_ROOT_PATH + "pkgdb.ron" # "database"
+INSTALL_ROOT_PATH = "/syn/"         # install all packages here
+SYNDB = INSTALL_ROOT_PATH + "pkgdb" # "database"
+LOCKF = INSTALL_ROOT_PATH + ".lock" # lock
 
 SYN_BIN_PKG_XTN     = "syn"         # pkg-1.0.BIN_PKG
 SYN_SRC_PKG_XTN     = "syn.tar.gz"  # pkg-1.0.SRC_PKG

@@ -46,3 +46,4 @@ def getBinaryMetadata(package):
 		raise Syn.errors.InvalidArchiveException("Archive is not a binary package")
 
 	return ar.getConf(g.SYN_BINARY_META)
+

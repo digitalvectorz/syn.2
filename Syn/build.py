@@ -132,7 +132,6 @@ def build(ar):
 		l.l(l.CRITICAL,"FTBFS DETECTED!!!")
 		l.l(l.CRITICAL,"*****")
 		raise Syn.errors.BuildFailureException("FTBFS")
-
 	c.cd("..")
 
 	binary = package(metainf)

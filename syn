@@ -7,6 +7,7 @@
 from optparse import OptionParser
 import Syn.s as syn
 import Syn.log as l
+import Syn.db
 import Syn.errors
 
 attrs = [
@@ -19,12 +20,16 @@ attrs = [
 	"deps",
 ]
 
+def nuke(foo, bar, baz, mani):
+	Syn.db.strapDB()
+
 parser = OptionParser()
 
-parser.add_option(
-	"-b", "--build", dest = "build", help = "Build a syn source ball." )
-parser.add_option(
-	"-n", "--info", dest = "info", help = "Read binary package metadata" )
+parser.add_option( "-b", "--build", dest = "build", help = "Build a syn source ball." )
+parser.add_option( "-n", "--info",  dest = "info",  help = "Read binary package metadata" )
+parser.add_option( "-q", "--query", dest = "query", help = "Query the package database" )
+
+# parser.add_option( "--NUKE", action="callback", callback=nuke, help = "Nuke the package states" )
 
 (options, args) = parser.parse_args()
 
@@ -54,4 +59,19 @@ if options.info:
 				print attr + ":	" + info[attr]
 	except Syn.errors.InvalidArchiveException as e:
 		l.l(l.CRITICAL,str(e))
-		pass
+
+if options.query:
+	(package, version) = Syn.common.processFullID(options.query)
+	db = Syn.db.SynDB()
+	db.initPkg("bash","4.2")
+
+	try:
+		if version != None:
+			state = db.queryState(package, version)
+			print state
+		else:
+			state = db.queryGState(package)
+			print state
+
+	except Syn.errors.PackageNotFoundException as e:
+		l.l(l.CRITICAL, str(e))
