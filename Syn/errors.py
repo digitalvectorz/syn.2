@@ -3,49 +3,67 @@
 # GNU GPL-3+, 2011
 #
 
-class ArchiveNotFoundException(Exception):
+class SynException(Exception):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
-class InvalidJSONException(Exception):
+class ArchiveNotFoundException(SynException):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
-class InvalidArchiveException(Exception):
+class InvalidJSONException(SynException):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
-class NotAnArchiveException(Exception):
+class InvalidArchiveException(SynException):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
-class FileNotPresentException(Exception):
+class NotAnArchiveException(SynException):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
-class BuildFailureException(Exception):
+class FileNotPresentException(SynException):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
-class MutexException(Exception):
+class BuildFailureException(SynException):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
-class PackageNotFoundException(Exception):
+class MutexException(SynException):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
+
+class PackageNotFoundException(SynException):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
+
+class PackageInstalledException(SynException):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
+
+class PackageUninstalledException(SynException):
 	def __init__(self, value):
 		self.value = value
 	def __str__(self):

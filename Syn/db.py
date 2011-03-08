@@ -15,7 +15,7 @@ REMOVED        = "R"
 BORKED         = "B"
 UNINSTALLED    = "U"
 
-HR_FMT = {
+HR_STATE = {
 	INSTALLED       : "Installed",
 	HALF_INSTALLED  : "Half-installed",
 	LINKED          : "Linked",
@@ -30,8 +30,7 @@ class SynDB:
 	def queryState(self, package, version):
 		Syn.log.l(Syn.log.PEDANTIC, "Checking on %s (%s)" % ( package, version ))
 		try:
-			pkg_root = self._database[package]
-			return pkg_root["installed"][version]
+			return self._database[package]["installed"][version]
 		except KeyError as e:
 			raise Syn.errors.PackageNotFoundException("No package found")
 
@@ -41,6 +40,22 @@ class SynDB:
 			return self._database[package]
 		except KeyError as e:
 			raise Syn.errors.PackageNotFoundException("No package found")
+
+	def registerNewPackage(self, package, version, status):
+		try:
+			pkg = self._database[package]
+			try:
+				ver = pkg['installed'][version]
+				raise Syn.errors.PackageInstalledException('package/version already registered')
+			except KeyError:
+				pkg['installed'][version] = { "status" : status }
+
+		except KeyError:
+			self._database[package] = {
+				"linked"    : None,
+				"installed" : {}
+			}
+			return self.registerNewPackage(package, version, status)
 
 	def initPkg(self, package, version):
 		self._database[package] = {
@@ -55,6 +70,9 @@ class SynDB:
 	def setState(self, package, version, status):
 		Syn.log.l(Syn.log.PEDANTIC, "Setting %s (v%s) -- %s" % ( package, version, status ))
 		self._database[package]['installed'][version]['status'] = status
+
+	def sync(self):
+		self.writeout()
 
 	def writeout(self):
 		Syn.log.l(Syn.log.PEDANTIC, "Writing DB!")
