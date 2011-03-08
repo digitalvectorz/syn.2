@@ -11,13 +11,20 @@ LOG      = 4
 VERBOSE  = 5
 PEDANTIC = 6
 
+HR_LOGLEVELS = {
+	CRITICAL : "Critical ",
+	HIGH     : "High     ",
+	MESSAGE  : "Message  ",
+	NOTICE   : "Notice   ",
+	LOG      : "Log      ",
+	VERBOSE  : "Verbose  ",
+	PEDANTIC : "Pedantic "
+}
+
 DEFAULT   = MESSAGE
 VERBOSITY = PEDANTIC
 
 def l(level, msg):
 	if level <= VERBOSITY:
-		print "[l] (" + str(level) + "): " + msg;
+		print "[l] (" + HR_LOGLEVELS[level] + "): " + msg;
 
-def o(array):
-	for m in msg:
-		print m + ":	" + msg[m]

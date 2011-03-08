@@ -9,6 +9,7 @@ import Syn.s as syn
 import Syn.log as l
 import Syn.db
 import Syn.errors
+import Syn.install
 
 attrs = [
 	"package",
@@ -20,17 +21,13 @@ attrs = [
 	"deps",
 ]
 
-def nuke(foo, bar, baz, mani):
-	Syn.db.strapDB()
-
 parser = OptionParser()
 
-parser.add_option( "-b", "--build",  dest = "build",  help = "Build a syn source ball." )
-parser.add_option( "-n", "--info",   dest = "info",   help = "Read binary package metadata" )
-parser.add_option( "-v", "--verify", dest = "verify", help = "Verify a package" )
-parser.add_option( "-q", "--query",  dest = "query",  help = "Query the package database" )
-
-# parser.add_option( "--NUKE", action="callback", callback=nuke, help = "Nuke the package states" )
+parser.add_option( "-b", "--build",   dest = "build",   help = "Build a syn source ball." )
+parser.add_option( "-n", "--info",    dest = "info",    help = "Read binary package metadata" )
+parser.add_option( "-i", "--install", dest = "install", help = "Install a package to the filesystem." )
+parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
+parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
 
 (options, args) = parser.parse_args()
 
@@ -42,7 +39,6 @@ if options.build:
 			l.l(l.CRITICAL,"Built with success!")
 	except Syn.errors.InvalidArchiveException as e:
 		l.l(l.CRITICAL,str(e))
-		pass
 
 if options.info:
 	try:
@@ -62,11 +58,11 @@ if options.info:
 		l.l(l.CRITICAL,str(e))
 
 if options.query:
-	(package, version) = Syn.common.processFullID(options.query)
-	db = Syn.db.loadCanonicalDB()
-
 	#db.registerNewPackage("bash", "4.2", "U")
 	#db.sync()
+
+	(package, version) = Syn.common.processFullID(options.query)
+	db = Syn.db.loadCanonicalDB()
 
 	try:
 		if version != None:
@@ -88,3 +84,10 @@ if options.verify:
 	except Syn.errors.SynException as e:
 		l.l(l.CRITICAL,str(e))
 
+if options.install:
+	try:
+		Syn.install.installArchive(
+			Syn.tarball.archive(options.install)
+		)
+	except Syn.errors.SynException as e:
+		l.l(l.CRITICAL,str(e))

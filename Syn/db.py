@@ -57,16 +57,6 @@ class SynDB:
 			}
 			return self.registerNewPackage(package, version, status)
 
-	def initPkg(self, package, version):
-		self._database[package] = {
-			"linked" : None,
-			"installed" : {
-				version : {
-					"status" : "U"
-				}
-			}
-		}
-
 	def setState(self, package, version, status):
 		Syn.log.l(Syn.log.PEDANTIC, "Setting %s (v%s) -- %s" % ( package, version, status ))
 		self._database[package]['installed'][version]['status'] = status
@@ -80,7 +70,7 @@ class SynDB:
 		Syn.log.l(Syn.log.PEDANTIC, "File open")
 		pickle.dump(self._database, database)
 		Syn.log.l(Syn.log.PEDANTIC, "Dumped pickle data")
-		Syn.log.l(Syn.log.PEDANTIC, str(self._database))
+		# Syn.log.l(Syn.log.PEDANTIC, str(self._database))
 		database.close()
 		Syn.log.l(Syn.log.PEDANTIC, "closed pickle")
 

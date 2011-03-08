@@ -80,7 +80,7 @@ class archive:
 			for x in delta:
 				Syn.log.l(Syn.log.MESSAGE, x + " is in conflict")
 				errors += 1
-			Syn.log.l(Syn.log.MESSAGE, errors + " errors in md5 checking")
+			Syn.log.l(Syn.log.MESSAGE, str(errors) + " errors in md5 checking")
 			assert errors == 0
 
 	def _loadResources(self):
