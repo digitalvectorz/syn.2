@@ -4,7 +4,11 @@
 #
 
 WORKDIR         = "/tmp/syn/" # where to unpack & build
-ARCHIVE_FS_ROOT = "syn/"      # binary package root
+
+# binary package root
+ARCHIVE_FS_ROOT_NOSLASH = "syn"
+ARCHIVE_FS_ROOT = ARCHIVE_FS_ROOT_NOSLASH + "/"
+
 BUILD_FS_ROOT   = "build/"    # build build folder
 
 INSTALL_ROOT_PATH = "/syn/"             # install all packages here
@@ -24,7 +28,7 @@ SYN_BUILDDIR_MPKG   = "multipkg"   # multipkg file for more then one
 SYN_SRC_LOAD_ON_LOAD = [
 	SYN_SRC_DIR + SYN_BUILDDIR_CONFIG,
 	SYN_SRC_DIR + SYN_BUILDDIR_META,
-	SYN_SRC_DIR + SYN_BUILDDIR_MPKG
+	# SYN_SRC_DIR + SYN_BUILDDIR_MPKG
 ]
 
 SYN_BINARY_FILESUMS  = ".filesums"  # MD5 sums
@@ -35,6 +39,10 @@ SYN_BIN_LOAD_ON_LOAD = [
 	SYN_BINARY_FILESUMS,
 	SYN_BINARY_META
 ]
+
+SYN_SRC_TO_BIN_FILESPEC = {
+	SYN_SRC_DIR + SYN_BUILDDIR_META : ARCHIVE_FS_ROOT + SYN_BINARY_META
+}
 
 SYN_XTRACT_META      = "metainf"    # metainf in the filesystem
 

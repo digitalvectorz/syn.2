@@ -45,7 +45,7 @@ class archive:
 		return self._konf[conffile]
 
 	def _verify(self):
-		root = self._getRootFolder()
+		root = self.getRootFolder()
 		package, version = Syn.common.processFullID(root)
 
 		if self._klass == SOURCE:
@@ -57,7 +57,7 @@ class archive:
 #			assert version == self._konf[g.SYN_BINARY_META]['version']
 
 	def _loadResources(self):
-		root = self._getRootFolder()
+		root = self.getRootFolder()
 		processList = [];
 
 		if self._klass == BINARY:
@@ -89,7 +89,7 @@ class archive:
 			pass
 
 		try:
-			pkg_root = self._getRootFolder()
+			pkg_root = self.getRootFolder()
 			self.pullJSON(pkg_root + "/" + g.SYN_SRC_DIR + g.SYN_BUILDDIR_META)
 			self._klass = SOURCE
 			Syn.log.l(Syn.log.VERBOSE, "discovered the source giveaway")
@@ -97,7 +97,7 @@ class archive:
 		except Syn.errors.FileNotPresentException:
 			pass
 
-	def _getRootFolder(self):
+	def getRootFolder(self):
 		members = self.tarball_target.getmembers()
 		directories = []
 		for member in members:

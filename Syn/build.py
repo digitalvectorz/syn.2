@@ -3,34 +3,22 @@
 # GNU GPL-3+, 2011
 #
 
-import Syn.common as c
-import Syn.Global as g
-import Syn.install
+import Syn.Global  as g
+import Syn.log     as l
+import Syn.common  as c
+import Syn.tarball as t
 import Syn.s
-import Syn.log
 
 import json
-
-import urllib
-import shutil
 import os
 
-def build(pack_loc):
-	build_config = Syn.s.loadBuildConfigFile()
-	meta_config  = Syn.s.loadMetaConfigFile()
-	package, version = Syn.s.getVersion()
-	pkg = meta_config['package']
-	ver = meta_config['version']
-	if package != pkg:
-		raise KeyError("Package metafile does not match tarball!")
-	else:
-		Syn.log.l(Syn.log.VERBOSE, "package matches conf")
-	if version != ver:
-		Syn.log.l(Syn.log.MESSAGE, "Version does not match. Resetting metafile's conf")
-		meta_config['version'] = version
-		writeMetafile(meta_config)
-	else:
-		Syn.log.l(Syn.log.VERBOSE, "Version matches conf")
+def readConfFile(f):
+	l.l(l.PEDANTIC,"Reading Conf: " + f)
+	meta = open(f)
+	return json.loads(meta.read())
+
+def setupBuildEnv(ar):
+	build_config = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_CONFIG)
 
 	config_flag_string = ""
 	build_flag_string  = ""
@@ -53,14 +41,7 @@ def build(pack_loc):
 	Syn.s.putenv(g.BUILD,  build_config['build'])
 	Syn.s.putenv(g.STAGE,  build_config['stage'])
 
-	script = os.path.abspath(g.SYN_BUILDDIR + g.SYN_BUILDDIR_SCRIPT)
-
-	root = Syn.s._tb.getRootFolder()
-	c.cd(root)
-
-	Syn.s.putenv(g.DESTDIR, pack_loc  + "/" + g.ARCHIVE_FS_ROOT)
-	c.mkdir(pack_loc + "/" + g.ARCHIVE_FS_ROOT)
-
+def callScript(script):
 	Syn.log.l(Syn.log.MESSAGE, "Start Configure")
 	c_return = os.system(script + " configure")
 	Syn.log.l(Syn.log.MESSAGE, "End Configure")
@@ -84,77 +65,74 @@ def build(pack_loc):
 
 	return 0
 
-def buildSourcePackage(pkg_loc):
-	c.cd(pkg_loc)
+def package(metainf):
+	for x in g.SYN_SRC_TO_BIN_FILESPEC:
+		c.cp(x, "../" + g.SYN_SRC_TO_BIN_FILESPEC[x])
 
-	metainf = Syn.s.loadMetaConfigFile()
+	c.cd("..")
+	files = c.md5sumwd(g.ARCHIVE_FS_ROOT_NOSLASH)
+	output = json.dumps(files, sort_keys = True, indent = 4)
+	f = open(g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_FILESUMS, 'w')
+	f.write(output)
+	f.close()
+
 	pkg = metainf['package']
 	ver = metainf['version']
 
-	Syn.log.l(Syn.log.VERBOSE, "Working on " + pkg + ", version " + ver)
+	b_pth = pkg + "-" + ver + "." + g.SYN_BIN_PKG_XTN
 
-	if os.path.exists(pkg + "-" + ver + ".tar.gz"):
-		Syn.log.l(Syn.log.VERBOSE, "Tarball is checked out already")
-	else:
-		url = metainf['download']
-		Syn.log.l(Syn.log.HIGH, "Downloading package from " + url)
-		urllib.urlretrieve(url, "./" + pkg + "-" + ver + ".tar.gz")
-	if os.path.exists(pkg + "-" + ver + ".tar.gz"):
-		c.cd("..")
-		Syn.log.l(Syn.log.VERBOSE, "tar  " + "./" + pkg + "-" + ver)
-		Syn.log.l(Syn.log.VERBOSE, "into " + "./" + pkg + "-" + ver + "." + g.SRC_PKG)
-		Syn.s.tarup(
-			pkg + "-" + ver,
-			pkg + "-" + ver + "." + g.SRC_PKG
+	ar = t.newArchive(
+		[ g.ARCHIVE_FS_ROOT ],
+		b_pth,
+		t.BINARY
+	)
+
+	c.cp( b_pth, "/tmp/syn/" + b_pth )
+
+def build(ar):
+	l.l(l.PEDANTIC,"Extracting archive")
+	ar.extractall()
+	l.l(l.PEDANTIC,"Archive extracted")
+
+	root = os.path.abspath(os.getcwd())
+	l.l(l.PEDANTIC,"Current root: %s" % ( root ))
+
+	metainf = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META)
+
+	pkg = metainf['package']
+	ver = metainf['version']
+
+	script = os.path.abspath(
+		pkg + "-" + ver + "/" + g.SYN_SRC_DIR + g.SYN_BUILDDIR_SCRIPT
+	)
+
+	l.l(l.PEDANTIC,
+		"Maintainer is %s <%s>" % (
+			metainf['maintainer']['name'],
+			metainf['maintainer']['email']
 		)
-	else:
-		Syn.log.l(Syn.log.CRITICAL, "Failed to get package! Damn!")
+	)
+
+	l.l(l.PEDANTIC,"Building %s version %s" % ( pkg, ver ))
+
+	c.cd(pkg + "-" + ver)
+
+	upstream_archive = t.archive(pkg + "-" + ver + ".tar.gz") #XXX: Fixme
+	upstream_archive.extractall()
+
+	c.cd(pkg + "-" + ver)
+
+	setupBuildEnv(ar)
+
+	Syn.s.putenv(g.DESTDIR, root + "/" + g.ARCHIVE_FS_ROOT)
+	c.mkdir(root + "/" + g.ARCHIVE_FS_ROOT)
+
+	if callScript(script) != 0:
+		l.l(l.CRITICAL,"*****")
+		l.l(l.CRITICAL,"FTBFS DETECTED!!!")
+		l.l(l.CRITICAL,"*****")
 		return -1
 
-def buildFromSource(pkg_path):
-	pack_loc = c.getTempLocation()
-	pop_location = os.path.abspath(os.getcwd())
+	c.cd("..")
 
-	c.createWorkDir(pack_loc)
-	Syn.s.targetTarball(pkg_path)
-	Syn.s.extractSource(pack_loc)
-	pkg, ver = Syn.s.getVersion()
-	c.cd(pkg + "-" + ver)
-	Syn.s.targetTarball(pkg + "-" + ver + ".tar.gz")
-	Syn.s.extractSource(pack_loc, pkg + "-" + ver)
-	c.cd(pkg + "-" + ver)
-	if build(pack_loc) == 0:
-		c.cd(pack_loc)
-
-		shutil.copyfile(
-			pack_loc + pkg + "-" + ver + "/" + g.SYN_BUILDDIR + g.SYN_BUILDDIR_META,
-			pack_loc + g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_META
-		)
-
-		files = Syn.s.md5sumwd(g.ARCHIVE_FS_ROOT)
-
-		output = json.dumps(
-			files,
-			sort_keys = True,
-			indent    = 4
-		)
-
-		f = open(g.ARCHIVE_FS_ROOT + "/" + g.SYN_FILESUMS, 'w')
-		f.write(output)
-		f.close()
-
-		Syn.s.tarup(
-			g.ARCHIVE_FS_ROOT,
-			pack_loc + "/" + pkg + "-" + ver + "." + g.BIN_PKG
-		)
-		shutil.move(
-			pack_loc + "/" + pkg + "-" + ver + "." + g.BIN_PKG,
-			pop_location
-		)
-	else:
-		Syn.log.l(Syn.log.CRITICAL, "FTBFS DETECTED")
-
-	shutil.rmtree(pack_loc + g.ARCHIVE_FS_ROOT)
-	shutil.rmtree(pack_loc + pkg + "-" + ver)
-
-	c.removeWorkDir()
+	package(metainf)

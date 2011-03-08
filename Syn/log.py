@@ -17,3 +17,7 @@ VERBOSITY = PEDANTIC
 def l(level, msg):
 	if level <= VERBOSITY:
 		print "[l] (" + str(level) + "): " + msg;
+
+def o(array):
+	for m in msg:
+		print m + ":	" + msg[m]
