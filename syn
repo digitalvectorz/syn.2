@@ -90,4 +90,6 @@ if options.install:
 			Syn.tarball.archive(options.install)
 		)
 	except Syn.errors.SynException as e:
+		l.l(l.CRITICAL,"*****")
 		l.l(l.CRITICAL,str(e))
+		l.l(l.CRITICAL,"*****")

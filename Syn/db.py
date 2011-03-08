@@ -70,7 +70,6 @@ class SynDB:
 		Syn.log.l(Syn.log.PEDANTIC, "File open")
 		pickle.dump(self._database, database)
 		Syn.log.l(Syn.log.PEDANTIC, "Dumped pickle data")
-		# Syn.log.l(Syn.log.PEDANTIC, str(self._database))
 		database.close()
 		Syn.log.l(Syn.log.PEDANTIC, "closed pickle")
 

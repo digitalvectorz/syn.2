@@ -5,6 +5,7 @@
 
 import Syn.Global  as g
 import Syn.log     as l
+import Syn.common  as c
 import Syn.tarball as t
 import Syn.errors
 import Syn.db
@@ -34,4 +35,24 @@ def installArchive(ar):
 		db.sync()
 
 	l.l(l.LOG,"Moving on with the package install")
+	c.cd(g.INSTALL_ROOT_PATH)
+	if not c.xists(pkg):
+		c.mkdir(pkg)
+	c.cd(pkg)
 
+	db.setState(pkg,ver,Syn.db.HALF_INSTALLED)
+	db.sync()
+
+	if c.xists(ver):
+		raise Syn.errors.PackageInstalledException("Package already in the FS. Please purge")
+
+	c.mkdir(ver)
+	c.cd(ver)
+
+	ar.extractall()
+	
+	for path in g.SYN_BIN_TO_XTRACT:
+		c.cp(path, g.SYN_BIN_TO_XTRACT[path])
+
+	db.setState(pkg,ver,Syn.db.INSTALLED)
+	db.sync()
