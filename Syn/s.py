@@ -43,6 +43,6 @@ def getBinaryMetadata(package):
 	ar = t.archive(package)
 	klass = ar.getClass()
 	if klass != t.BINARY:
-		l.l(l.CRITICAL,"Archive is not a binary package")
-		return -1
+		raise Syn.errors.InvalidArchiveException("Archive is not a binary package")
+
 	return ar.getConf(g.SYN_BINARY_META)

@@ -7,6 +7,7 @@
 from optparse import OptionParser
 import Syn.s as syn
 import Syn.log as l
+import Syn.errors
 
 attrs = [
 	"package",
@@ -28,22 +29,29 @@ parser.add_option(
 (options, args) = parser.parse_args()
 
 if options.build:
-	if syn.buildSourcePackage(options.build) != 0:
-		l.l(l.CRITICAL,"Failure to build!")
-	else:
-		l.l(l.CRITICAL,"Built with success!")
+	try:
+		if syn.buildSourcePackage(options.build) != 0:
+			l.l(l.CRITICAL,"Failure to build!")
+		else:
+			l.l(l.CRITICAL,"Built with success!")
+	except Syn.errors.InvalidArchiveException as e:
+		l.l(l.CRITICAL,str(e))
+		pass
 
 if options.info:
-	info = syn.getBinaryMetadata(options.info)
-	for attr in attrs:
-		if isinstance(info[attr], list):
-			print attr + ":	"
-			for x in info[attr]:
-				print "  " + str(x)
-		elif isinstance(info[attr], dict):
-			print attr + ":	"
-			for x in info[attr]:
-				print "  " + str(info[attr][x])
-		else:
-			print attr + ":	" + info[attr]
-
+	try:
+		info = syn.getBinaryMetadata(options.info)
+		for attr in attrs:
+			if isinstance(info[attr], list):
+				print attr + ":	"
+				for x in info[attr]:
+					print "  " + str(x)
+			elif isinstance(info[attr], dict):
+				print attr + ":	"
+				for x in info[attr]:
+					print "  " + str(info[attr][x])
+			else:
+				print attr + ":	" + info[attr]
+	except Syn.errors.InvalidArchiveException as e:
+		l.l(l.CRITICAL,str(e))
+		pass

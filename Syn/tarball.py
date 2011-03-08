@@ -39,10 +39,11 @@ class archive:
 				self._verify()
 			except AssertionError:
 				raise Syn.errors.InvalidArchiveException("Verification Failed!")
-
 		except ValueError as e:
 			Syn.log.l(Syn.log.CRITICAL, "Failed to open archive " + str(e))
 			raise Syn.errors.ArchiveNotFoundException(e)
+		except IOError:
+			raise Syn.errors.InvalidArchiveException("Failure to read archive!")
 
 	def getConf(self, conffile):
 		return self._konf[conffile]
