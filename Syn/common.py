@@ -46,7 +46,7 @@ def dict_diff(first, second):
 	# Check all keys in first dict
 	for key in first.keys():
 		if (not second.has_key(key)):
-			diff[key] = (first[key], KEYNOTFOUND)
+			diff[key] = (first[key], "<UNKNOWN>")
 		elif (first[key] != second[key]):
 			diff[key] = (first[key], second[key])
 	# Check all keys in second dict to find missing

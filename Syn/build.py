@@ -131,7 +131,7 @@ def build(ar):
 		l.l(l.CRITICAL,"*****")
 		l.l(l.CRITICAL,"FTBFS DETECTED!!!")
 		l.l(l.CRITICAL,"*****")
-		raise BuildFailureException("FTBFS")
+		raise Syn.errors.BuildFailureException("FTBFS")
 
 	c.cd("..")
 

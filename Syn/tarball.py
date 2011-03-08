@@ -35,7 +35,10 @@ class archive:
 			self._classify()
 			self._loadResources()
 
-			self._verify()
+			try:
+				self._verify()
+			except AssertionError:
+				raise Syn.errors.InvalidArchiveException("Verification Failed!")
 
 		except ValueError as e:
 			Syn.log.l(Syn.log.CRITICAL, "Failed to open archive " + str(e))
@@ -52,9 +55,15 @@ class archive:
 			assert package == self._konf[g.SYN_SRC_DIR + g.SYN_BUILDDIR_META]['package']
 			assert version == self._konf[g.SYN_SRC_DIR + g.SYN_BUILDDIR_META]['version']
 
-#		if self._klass == BINARY:
-#			assert package == self._konf[g.SYN_BINARY_META]['package']
-#			assert version == self._konf[g.SYN_BINARY_META]['version']
+		if self._klass == BINARY:
+			actualSums = self.genSums()
+			del(actualSums[g.ARCHIVE_FS_ROOT + g.SYN_BINARY_FILESUMS])
+			delta = Syn.common.dict_diff(actualSums, self._konf[g.SYN_BINARY_FILESUMS])
+			errors = 0
+			for x in delta:
+				Syn.log.l(Syn.log.PEDANTIC, x + " is in conflict")
+				errors += 1
+			assert errors == 0
 
 	def _loadResources(self):
 		root = self.getRootFolder()
@@ -132,7 +141,7 @@ class archive:
 
 def newArchive( dirs, output, expectedType ):
 	Syn.log.l(Syn.log.PEDANTIC,"Taring " + output)
-	tarball_target = tarfile.open(str(output), "w")
+	tarball_target = tarfile.open(str(output), "w|gz")
 
 	for directory in dirs:
 		Syn.log.l(Syn.log.PEDANTIC,"Adding " + directory)
