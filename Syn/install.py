@@ -35,6 +35,10 @@ def installArchive(ar):
 		db.sync()
 
 	l.l(l.LOG,"Moving on with the package install")
+
+	# XXX: Someone fix below this, please.
+	#      use Syn.fspkg.fspkg()
+
 	c.cd(g.INSTALL_ROOT_PATH)
 	if not c.xists(pkg):
 		c.mkdir(pkg)
@@ -49,10 +53,12 @@ def installArchive(ar):
 	c.mkdir(ver)
 	c.cd(ver)
 
+	# XXX: Above this
+
 	ar.extractall()
 	
 	for path in g.SYN_BIN_TO_XTRACT:
-		c.cp(path, g.SYN_BIN_TO_XTRACT[path])
+		c.mv(path, g.SYN_BIN_TO_XTRACT[path])
 
 	db.setState(pkg,ver,Syn.db.INSTALLED)
 	db.sync()

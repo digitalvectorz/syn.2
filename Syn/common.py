@@ -37,6 +37,10 @@ def cp(to, fro):
 	shutil.copy(to, fro)
 	Syn.log.l(Syn.log.PEDANTIC, "copy %s %s" % (to, fro))
 
+def mv(to, fro):
+	shutil.move(to, fro)
+	Syn.log.l(Syn.log.PEDANTIC, "move %s %s" % (to, fro))
+
 def xists(loc):
 	Syn.log.l(Syn.log.PEDANTIC, "checking path `%s'" % loc)
 	return os.path.exists(loc)

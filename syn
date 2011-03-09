@@ -99,9 +99,13 @@ if options.install:
 
 if options.link:
 	(pkg, ver) = Syn.common.processFullID(options.link)
-	if ver != None:
-		Syn.link.linkPkg(pkg, ver)
-	else:
-		l.l(l.CRITICAL,"*****")
-		l.l(l.CRITICAL,"Not a full versioned package")
-		l.l(l.CRITICAL,"*****")
+	try:
+		if ver != None:
+			Syn.link.linkPkg(pkg, ver)
+		else:
+			l.l(l.CRITICAL,"*****")
+			l.l(l.CRITICAL,"Not a full versioned package")
+			l.l(l.CRITICAL,"*****")
+	except Syn.errors.SynException as e:
+		l.l(l.CRITICAL,str(e))
+
