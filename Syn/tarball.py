@@ -76,6 +76,7 @@ class archive:
 			del(actualSums[g.ARCHIVE_FS_ROOT + g.SYN_BINARY_FILESUMS])
 			Syn.log.l(Syn.log.MESSAGE, "Comparing to stored sums")
 			delta = Syn.common.dict_diff(actualSums, self._konf[g.SYN_BINARY_FILESUMS])
+			print delta
 			errors = 0
 			for x in delta:
 				Syn.log.l(Syn.log.MESSAGE, x + " is in conflict")
@@ -100,6 +101,7 @@ class archive:
 		sumlist = {}
 
 		for tarinfo in filelist:
+			Syn.log.l(Syn.log.PEDANTIC, "  " + tarinfo.name)
 			if tarinfo.isfile():
 				fd = self.tarball_target.extractfile(tarinfo)
 				md5 = Syn.verification.sumfile(fd)

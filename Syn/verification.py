@@ -8,7 +8,7 @@ def sumfile(fobj):
 	'''Returns an md5 hash for an object with read() method.'''
 	m = hashlib.md5()
 	while True:
-		d = fobj.read(8096)
+		d = fobj.read(1024)
 		if not d:
 			break
 		m.update(d)
