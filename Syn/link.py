@@ -39,3 +39,9 @@ def linkPkg(pkg, ver, root="/"):
 		if errors != 0:
 			raise Syn.errors.ConflictException("Link conflicts!")
 
+		for f in fslist:
+			pkg_root = pkg.getInstallPath()
+			fs_root  = root
+			filespec = f[len(g.ARCHIVE_FS_ROOT):]
+			c.ln(pkg_root + f, root + filespec)
+
