@@ -31,6 +31,7 @@ parser.add_option( "-i", "--install", dest = "install", help = "Install a packag
 parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
 parser.add_option( "-l", "--link",    dest = "link",    help = "Link a package into the filesystem" )
+parser.add_option( "-u", "--unlink",  dest = "unlink",  help = "Unlink a package into the filesystem" )
 
 (options, args) = parser.parse_args()
 
@@ -102,6 +103,18 @@ if options.link:
 	try:
 		if ver != None:
 			Syn.link.linkPkg(pkg, ver)
+		else:
+			l.l(l.CRITICAL,"*****")
+			l.l(l.CRITICAL,"Not a full versioned package")
+			l.l(l.CRITICAL,"*****")
+	except Syn.errors.SynException as e:
+		l.l(l.CRITICAL,str(e))
+
+if options.unlink:
+	(pkg, ver) = Syn.common.processFullID(options.unlink)
+	try:
+		if ver != None:
+			Syn.link.unlinkPkg(pkg, ver)
 		else:
 			l.l(l.CRITICAL,"*****")
 			l.l(l.CRITICAL,"Not a full versioned package")

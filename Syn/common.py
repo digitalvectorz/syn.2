@@ -41,6 +41,10 @@ def mv(to, fro):
 	shutil.move(to, fro)
 	Syn.log.l(Syn.log.PEDANTIC, "move %s %s" % (to, fro))
 
+def isln(loc):
+	Syn.log.l(Syn.log.PEDANTIC, "checking is similink path `%s'" % loc)
+	return os.path.islink(loc)
+
 def xists(loc):
 	Syn.log.l(Syn.log.PEDANTIC, "checking path `%s'" % loc)
 	return os.path.exists(loc)
@@ -48,6 +52,10 @@ def xists(loc):
 def rmdir(dirs):
 	shutil.rmtree(dirs)
 	Syn.log.l(Syn.log.PEDANTIC, "rmdir " + dirs)
+
+def rm(dirs):
+	os.remove(dirs)
+	Syn.log.l(Syn.log.PEDANTIC, "rm " + dirs)
 
 def ln(source, dest):
 	os.symlink(source, dest)
