@@ -68,8 +68,9 @@ def md5sumwd(check = os.getcwd()):
 			dictret = md5sumwd(path + "/" + f)
 			for x in dictret:
 				ret[x] = dictret[x]
-		elif os.path.isfile(path + "/" + f):
-			ret[path + "/" + f] = Syn.verification.md5sum(path + "/" + f)
+		elif os.path.islink(path + "/" + f):
+			Syn.log.l(Syn.log.PEDANTIC, "  nonfile not getting sum'd")
 		else:
-			Syn.log.l(Syn.log.PEDANTIC, "nonfile not getting sum'd")
+			Syn.log.l(Syn.log.PEDANTIC, "  " + path + "/" + f)
+			ret[path + "/" + f] = Syn.verification.md5sum(path + "/" + f)
 	return ret

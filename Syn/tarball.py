@@ -102,10 +102,16 @@ class archive:
 
 		for tarinfo in filelist:
 			Syn.log.l(Syn.log.PEDANTIC, "  " + tarinfo.name)
-			if tarinfo.isfile():
+			if tarinfo.isfile() or tarinfo.islnk():
 				fd = self.tarball_target.extractfile(tarinfo)
 				md5 = Syn.verification.sumfile(fd)
 				sumlist[tarinfo.name] = md5
+			else:
+				Syn.log.l(Syn.log.PEDANTIC, "  " + tarinfo.name + " ignoring nonfile ")
+				Syn.log.l(Syn.log.PEDANTIC, "  " + tarinfo.name + " h: " + str(tarinfo.islnk()))
+				Syn.log.l(Syn.log.PEDANTIC, "  " + tarinfo.name + " s: " + str(tarinfo.issym()))
+				
+
 		return sumlist
 
 	def _classify(self):
