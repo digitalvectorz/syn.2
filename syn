@@ -80,7 +80,7 @@ if options.query:
 
 if options.verify:
 	try:
-		Syn.tarball.archive(options.verify)
+		Syn.tarball.archive(options.verify, verify=True, inPlace=False)
 	except Syn.errors.SynException as e:
 		l.l(l.CRITICAL,str(e))
 

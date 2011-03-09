@@ -25,7 +25,7 @@ HR_CLASSES = {
 }
 
 class archive:
-	def __init__(self, archive):
+	def __init__(self, archive, verify=False, inPlace=True):
 		Syn.log.l(Syn.log.VERBOSE, "attempting to load " + archive )
 		try:
 			self.tarball_target = tarfile.open(archive, 'r')
@@ -35,10 +35,11 @@ class archive:
 			self._classify()
 			self._loadResources()
 
-			try:
-				self._verify()
-			except AssertionError:
-				raise Syn.errors.InvalidArchiveException("Verification Failed!")
+			if verify:
+				try:
+					self._verify(inPlace)
+				except AssertionError:
+					raise Syn.errors.InvalidArchiveException("Verification Failed!")
 		except ValueError as e:
 			Syn.log.l(Syn.log.CRITICAL, "Failed to open archive " + str(e))
 			raise Syn.errors.ArchiveNotFoundException(e)
@@ -48,7 +49,7 @@ class archive:
 	def getConf(self, conffile):
 		return self._konf[conffile]
 
-	def _verify(self):
+	def _verify(self, inPlace=True):
 		root = self.getRootFolder()
 		package, version = Syn.common.processFullID(root)
 
@@ -72,7 +73,7 @@ class archive:
 
 		if self._klass == BINARY:
 			Syn.log.l(Syn.log.MESSAGE, "Getting a filesum list")
-			actualSums = self.genSums()
+			actualSums = self.genSums(inPlace=inPlace)
 			del(actualSums[g.ARCHIVE_FS_ROOT + g.SYN_BINARY_FILESUMS])
 			Syn.log.l(Syn.log.MESSAGE, "Comparing to stored sums")
 			delta = Syn.common.dict_diff(actualSums, self._konf[g.SYN_BINARY_FILESUMS])
@@ -95,8 +96,29 @@ class archive:
 
 		for f in processList:
 			self._konf[f] = self.pullJSON(root + "/" + f)
-		
-	def genSums(self):
+
+	def genSums(self, inPlace = True):
+		if inPlace:
+			Syn.log.l(Syn.log.MESSAGE, "In Place")
+			return self.genSumsInPlace()
+		else:
+			Syn.log.l(Syn.log.MESSAGE, "In Tmp")
+			return self.genSumsInTmp()
+
+	def genSumsInTmp(self):
+		ret_loc = os.getcwd()
+		build_root = Syn.common.getTempLocation()
+		Syn.common.mkdir(build_root)
+		Syn.common.cd(build_root)
+
+		self.extractall()
+		sums = Syn.common.md5sumwd(g.ARCHIVE_FS_ROOT_NOSLASH)
+
+		Syn.common.rmdir(build_root)
+		Syn.common.cd(ret_loc)
+		return sums
+
+	def genSumsInPlace(self):
 		filelist = self.tarball_target.getmembers()
 		sumlist = {}
 
@@ -105,6 +127,7 @@ class archive:
 			if tarinfo.isfile() or tarinfo.islnk():
 				fd = self.tarball_target.extractfile(tarinfo)
 				md5 = Syn.verification.sumfile(fd)
+				fd.close()
 				sumlist[tarinfo.name] = md5
 			else:
 				Syn.log.l(Syn.log.PEDANTIC, "  " + tarinfo.name + " ignoring nonfile ")
