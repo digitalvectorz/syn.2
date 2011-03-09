@@ -10,6 +10,8 @@ import Syn.log as l
 import Syn.db
 import Syn.errors
 import Syn.install
+import Syn.bundle
+import Syn.link
 
 attrs = [
 	"package",
@@ -28,6 +30,7 @@ parser.add_option( "-n", "--info",    dest = "info",    help = "Read binary pack
 parser.add_option( "-i", "--install", dest = "install", help = "Install a package to the filesystem." )
 parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
+parser.add_option( "-l", "--link",    dest = "link",    help = "Link a package into the filesystem" )
 
 (options, args) = parser.parse_args()
 
@@ -92,4 +95,13 @@ if options.install:
 	except Syn.errors.SynException as e:
 		l.l(l.CRITICAL,"*****")
 		l.l(l.CRITICAL,str(e))
+		l.l(l.CRITICAL,"*****")
+
+if options.link:
+	(pkg, ver) = Syn.common.processFullID(options.link)
+	if ver != None:
+		Syn.link.linkPkg(pkg, ver)
+	else:
+		l.l(l.CRITICAL,"*****")
+		l.l(l.CRITICAL,"Not a full versioned package")
 		l.l(l.CRITICAL,"*****")

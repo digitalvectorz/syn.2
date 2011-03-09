@@ -8,12 +8,13 @@ import Syn.log
 
 import pickle
 
-INSTALLED      = "I"
+UNINSTALLED    = "U"
+BORKED         = "B"
 HALF_INSTALLED = "H"
+INSTALLED      = "I"
+HALF_LINKED    = "K"
 LINKED         = "L"
 REMOVED        = "R"
-BORKED         = "B"
-UNINSTALLED    = "U"
 
 HR_STATE = {
 	INSTALLED       : "Installed",
@@ -21,6 +22,7 @@ HR_STATE = {
 	LINKED          : "Linked",
 	REMOVED         : "Removed",
 	BORKED          : "Borked",
+	HALF_LINKED     : "Half-linked",
 	UNINSTALLED     : "Uninstalled"
 }
 

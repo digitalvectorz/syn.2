@@ -45,6 +45,10 @@ def rmdir(dirs):
 	shutil.rmtree(dirs)
 	Syn.log.l(Syn.log.PEDANTIC, "rmdir " + dirs)
 
+def ln(source, dest):
+	os.symlink(source, dest)
+	Syn.log.l(Syn.log.PEDANTIC, "ln " + source + " to " + dest)
+
 def dict_diff(first, second):
 	diff = {}
 	# Check all keys in first dict
@@ -69,7 +73,7 @@ def md5sumwd(check = os.getcwd()):
 			for x in dictret:
 				ret[x] = dictret[x]
 		elif os.path.islink(path + "/" + f):
-			Syn.log.l(Syn.log.PEDANTIC, "  nonfile not getting sum'd")
+			Syn.log.l(Syn.log.PEDANTIC, "  similink not getting sum'd")
 		else:
 			Syn.log.l(Syn.log.PEDANTIC, "  " + path + "/" + f)
 			ret[path + "/" + f] = Syn.verification.md5sum(path + "/" + f)
