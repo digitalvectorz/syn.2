@@ -117,10 +117,13 @@ def build(ar):
 
 	c.cd(pkg + "-" + ver)
 
-	upstream_archive = t.archive(pkg + "-" + ver + ".tar.gz") #XXX: Fixme
+	download = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META)['download']
+	sourceball = os.path.basename(download)
+
+	upstream_archive = t.archive(sourceball)
 	upstream_archive.extractall()
 
-	c.cd(pkg + "-" + ver)
+	c.cd(upstream_archive.getRootFolder())
 
 	setupBuildEnv(ar)
 
