@@ -79,7 +79,7 @@ class SynDB:
 		for pkg in db:
 			print pkg + ": (" + str(db[pkg]["linked"]) + ")"
 			for v in db[pkg]["installed"]:
-				print "  " + v + " " + HR_STATE[db[pkg]["installed"][v]['status']]
+				print "  " + v + ": " + HR_STATE[db[pkg]["installed"][v]['status']]
 			
 
 	def writeout(self):
