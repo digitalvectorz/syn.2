@@ -1,0 +1,10 @@
+#!/bin/bash
+# Paul Tagliamonte, GPLv3, 2011
+echo "Signing uploads."
+UPLOADS=`md5sum *.syn*`
+PKG=`ls *.syn`
+echo "$UPLOADS" > $PKG.sigs
+echo "Running gpg clearsign on the upload validator"
+gpg --clearsign $PKG.sigs
+rm $PKG.sigs
+mv $PKG.sigs.asc $PKG.sigs

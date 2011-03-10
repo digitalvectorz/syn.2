@@ -17,8 +17,8 @@ attrs = [
 	"package",
 	"version",
 	"description",
-	"homepage",
-	"download",
+#	"homepage",
+#	"download",
 	"maintainer",
 	"deps",
 ]
@@ -33,10 +33,13 @@ parser.add_option( "-l", "--link",    dest = "link",    help = "Link a package i
 parser.add_option( "-u", "--unlink",  dest = "unlink",  help = "Unlink a package into the filesystem" )
 parser.add_option( "-d", "--dbdump",  dest = "dbdump",  help = "Dump the database", action="store_true" )
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
+
 parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a source package",
 	action = "store_true", default = False)
+
 parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
 	action = "store_true", default = False)
+
 
 (options, args) = parser.parse_args()
 
