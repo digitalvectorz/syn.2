@@ -20,6 +20,12 @@ def processFullID(identifier):
 	except ValueError:
 		return [ identifier, None ]
 
+def isRoot():
+	uID = os.geteuid()
+	Syn.log.l(Syn.log.PEDANTIC, "euid: " + str(uID))
+	ret = uID == 0
+	return ret
+
 def getTempLocation():
 	timestamp = time.time()
 	unpack_dir = Syn.Global.WORKDIR + str(timestamp) + "/"

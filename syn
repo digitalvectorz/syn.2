@@ -89,36 +89,50 @@ if options.verify:
 		l.l(l.CRITICAL,str(e))
 
 if options.install:
-	try:
-		Syn.install.installArchive(
-			Syn.tarball.archive(options.install)
-		)
-	except Syn.errors.SynException as e:
+	if Syn.common.isRoot():
+		try:
+			Syn.install.installArchive(
+				Syn.tarball.archive(options.install)
+			)
+		except Syn.errors.SynException as e:
+			l.l(l.CRITICAL,"*****")
+			l.l(l.CRITICAL,str(e))
+			l.l(l.CRITICAL,"*****")
+	else:
 		l.l(l.CRITICAL,"*****")
-		l.l(l.CRITICAL,str(e))
+		l.l(l.CRITICAL,"You need to be root!")
 		l.l(l.CRITICAL,"*****")
 
 if options.link:
-	(pkg, ver) = Syn.common.processFullID(options.link)
-	try:
-		if ver != None:
-			Syn.link.linkPkg(pkg, ver)
-		else:
-			l.l(l.CRITICAL,"*****")
-			l.l(l.CRITICAL,"Not a full versioned package")
-			l.l(l.CRITICAL,"*****")
-	except Syn.errors.SynException as e:
-		l.l(l.CRITICAL,str(e))
+	if Syn.common.isRoot():
+		(pkg, ver) = Syn.common.processFullID(options.link)
+		try:
+			if ver != None:
+				Syn.link.linkPkg(pkg, ver)
+			else:
+				l.l(l.CRITICAL,"*****")
+				l.l(l.CRITICAL,"Not a full versioned package")
+				l.l(l.CRITICAL,"*****")
+		except Syn.errors.SynException as e:
+			l.l(l.CRITICAL,str(e))
+	else:
+		l.l(l.CRITICAL,"*****")
+		l.l(l.CRITICAL,"You need to be root!")
+		l.l(l.CRITICAL,"*****")
 
 if options.unlink:
-	(pkg, ver) = Syn.common.processFullID(options.unlink)
-	try:
-		if ver != None:
-			Syn.link.unlinkPkg(pkg, ver)
-		else:
-			l.l(l.CRITICAL,"*****")
-			l.l(l.CRITICAL,"Not a full versioned package")
-			l.l(l.CRITICAL,"*****")
-	except Syn.errors.SynException as e:
-		l.l(l.CRITICAL,str(e))
-
+	if Syn.common.isRoot():
+		(pkg, ver) = Syn.common.processFullID(options.unlink)
+		try:
+			if ver != None:
+				Syn.link.unlinkPkg(pkg, ver)
+			else:
+				l.l(l.CRITICAL,"*****")
+				l.l(l.CRITICAL,"Not a full versioned package")
+				l.l(l.CRITICAL,"*****")
+		except Syn.errors.SynException as e:
+			l.l(l.CRITICAL,str(e))
+	else:
+		l.l(l.CRITICAL,"*****")
+		l.l(l.CRITICAL,"You need to be root!")
+		l.l(l.CRITICAL,"*****")
