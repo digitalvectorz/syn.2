@@ -3,10 +3,27 @@
 # GNU GPL-3+, 2011
 #
 
-import os
+import Syn.common  as c
+import Syn.tarball as t
+import Syn.Global  as g
+import Syn.log     as l
+
 import os.path
-import Syn.log as l
+import os
 
 def bundleSource(directory):
-	cwd = os.path.abspath(directory)
-	print cwd
+	abspath = os.path.abspath(directory)
+	pkgdir  = os.path.basename(abspath)
+
+	c.cd(directory)
+	c.cd("..")
+
+	pkgname = str(pkgdir + "." + g.SYN_SRC_PKG_XTN)
+
+	t.newArchive(
+		[pkgdir],
+		pkgname,
+		t.SOURCE
+	)
+
+	return pkgname

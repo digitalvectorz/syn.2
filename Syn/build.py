@@ -9,6 +9,7 @@ import Syn.common  as c
 import Syn.tarball as t
 import Syn.s
 
+import commands
 import json
 import os
 
@@ -41,23 +42,26 @@ def setupBuildEnv(ar):
 	Syn.s.putenv(g.BUILD,  build_config['build'])
 	Syn.s.putenv(g.STAGE,  build_config['stage'])
 
+def run(cmd):
+	return commands.getstatusoutput(cmd)
+
 def callScript(script):
 	Syn.log.l(Syn.log.MESSAGE, "Start Configure")
-	c_return = os.system(script + " configure")
+	(c_return, clog) = run(script + " configure")
 	Syn.log.l(Syn.log.MESSAGE, "End Configure")
 
 	if c_return != 0:
 		return 1
 
 	Syn.log.l(Syn.log.MESSAGE, "Start Build")
-	b_return = os.system(script + " build")
+	(b_return, blog) = run(script + " build")
 	Syn.log.l(Syn.log.MESSAGE, "End Build")
 
 	if b_return != 0:
 		return 2
 
 	Syn.log.l(Syn.log.MESSAGE, "Start Stage")
-	s_return = os.system(script + " stage")
+	(s_return, slog) = run(script + " stage")
 	Syn.log.l(Syn.log.MESSAGE, "End Stage")
 
 	if s_return != 0:

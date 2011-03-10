@@ -84,11 +84,6 @@ class SynDB:
 			for version in state['installed']:
 				print "    " + version + ":	" + Syn.db.HR_STATE[state['installed'][version]['status']]
 
-			#print pkg + ": (" + str(db[pkg]["linked"]) + ")"
-			#for v in db[pkg]["installed"]:
-			#	print "  " + v + ": " + HR_STATE[db[pkg]["installed"][v]['status']]
-			
-
 	def writeout(self):
 		Syn.log.l(Syn.log.PEDANTIC, "Writing DB!")
 		database = open(g.SYNDB, 'wb')
