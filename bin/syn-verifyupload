@@ -1,8 +1,14 @@
 #!/bin/bash
 # Paul Tagliamonte, GPLv3, 2011
-echo "Signing uploads."
+echo "verifying sig"
 
-MDFIVE=`ls *.sigs`
+MDFIVE=`ls *.sigs 2>/dev/null`
+
+if [ "x$MDFIVE" == "x" ]; then
+	echo "No sig file. Aborting"
+	exit 3
+fi
+
 gpg --verify $MDFIVE
 
 if [ $? -ne 0 ]; then
