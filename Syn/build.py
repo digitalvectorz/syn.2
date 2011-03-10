@@ -46,28 +46,28 @@ def run(cmd):
 	return commands.getstatusoutput(cmd)
 
 def callScript(script):
-	Syn.log.l(Syn.log.MESSAGE, "Start Configure")
+	Syn.log.l(Syn.log.CRITICAL, "Start Configure")
 	(c_return, clog) = run(script + " configure")
-	Syn.log.l(Syn.log.MESSAGE, "End Configure")
+	Syn.log.l(Syn.log.CRITICAL, "End Configure")
 
 	if c_return != 0:
-		return 1
+		return (1, clog, None, None)
 
-	Syn.log.l(Syn.log.MESSAGE, "Start Build")
+	Syn.log.l(Syn.log.CRITICAL, "Start Build")
 	(b_return, blog) = run(script + " build")
-	Syn.log.l(Syn.log.MESSAGE, "End Build")
+	Syn.log.l(Syn.log.CRITICAL, "End Build")
 
 	if b_return != 0:
-		return 2
+		return (2, clog, blog, None)
 
-	Syn.log.l(Syn.log.MESSAGE, "Start Stage")
+	Syn.log.l(Syn.log.CRITICAL, "Start Stage")
 	(s_return, slog) = run(script + " stage")
-	Syn.log.l(Syn.log.MESSAGE, "End Stage")
+	Syn.log.l(Syn.log.CRITICAL, "End Stage")
 
 	if s_return != 0:
-		return 3
+		return (3, clog, blog, slog)
 
-	return 0
+	return (0, clog, blog, slog)
 
 def package(metainf):
 	for x in g.SYN_SRC_TO_BIN_FILESPEC:
@@ -84,6 +84,7 @@ def package(metainf):
 	ver = metainf['version']
 
 	b_pth = pkg + "-" + ver + "." + g.SYN_BIN_PKG_XTN
+	l_pth = pkg + "-" + ver + "." + g.SYN_LOG_PKG_XTN
 
 	ar = t.newArchive(
 		[ g.ARCHIVE_FS_ROOT ],
@@ -91,7 +92,25 @@ def package(metainf):
 		t.BINARY
 	)
 
-	return b_pth
+	ar = t.newArchive(
+		[ g.LOG_FS_ROOT ],
+		l_pth,
+		t.UNKNOWN
+	)
+
+	return ( b_pth, l_pth )
+
+def logLog(root, logname, text):
+	header  = "******************\n"
+	header += logname + "\n"
+	header += "******************\n"
+	header += "\n"
+
+	text = header + text
+
+	fd = open(root + "/" + g.LOG_FS_ROOT + logname, 'w')
+	fd.write(text)
+	fd.close()
 
 def build(ar):
 	l.l(l.PEDANTIC,"Extracting archive")
@@ -133,14 +152,25 @@ def build(ar):
 
 	Syn.s.putenv(g.DESTDIR, root + "/" + g.ARCHIVE_FS_ROOT)
 	c.mkdir(root + "/" + g.ARCHIVE_FS_ROOT)
+	c.mkdir(root + "/" + g.LOG_FS_ROOT)
 
-	if callScript(script) != 0:
-		l.l(l.CRITICAL,"*****")
-		l.l(l.CRITICAL,"FTBFS DETECTED!!!")
-		l.l(l.CRITICAL,"*****")
-		raise Syn.errors.BuildFailureException("FTBFS")
+	try:
+		( scriptStatus, clog, blog, slog ) = callScript(script)
+
+		logLog(root, "configure", clog)
+		logLog(root, "build",     blog)
+		logLog(root, "stage",     slog)
+
+		if scriptStatus != 0:
+			l.l(l.CRITICAL,"*****")
+			l.l(l.CRITICAL,"FTBFS DETECTED!!!")
+			l.l(l.CRITICAL,"*****")
+			raise Syn.errors.BuildFailureException("FTBFS")
+	except KeyboardInterrupt as e:
+		raise Syn.errors.BuildFailureException("User abort.")
+
 	c.cd("..")
 
-	binary = package(metainf)
+	( binary, log ) = package(metainf)
 
-	return binary
+	return ( binary, log )

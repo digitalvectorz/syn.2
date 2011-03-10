@@ -35,17 +35,20 @@ parser.add_option( "-d", "--dbdump",  dest = "dbdump",  help = "Dump the databas
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
 parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a source package",
 	action = "store_true", default = False)
-parser.add_option( "-s", "--shutup",  dest = "verbose", help = "Shut up the application",
+parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
 	action = "store_true", default = False)
 
 (options, args) = parser.parse_args()
 
 if options.verbose:
-	Syn.log.VERBOSITY = Syn.log.CRITICAL
+	Syn.log.VERBOSITY = Syn.log.PEDANTIC
 
 if options.roll:
+	print "Starting build!"
 	try:
 		pkg = Syn.bundle.bundleSource(".")
+		print "We're bundled. Running a test build now."
+
 		if syn.buildSourcePackage(pkg) != 0:
 			l.l(l.CRITICAL,"Failure to build!")
 		else:
@@ -55,6 +58,7 @@ if options.roll:
 
 if options.build:
 	try:
+		print "Building package. Please hold."
 		if syn.buildSourcePackage(options.build) != 0:
 			l.l(l.CRITICAL,"Failure to build!")
 		else:

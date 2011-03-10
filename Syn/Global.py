@@ -10,13 +10,15 @@ ARCHIVE_FS_ROOT_NOSLASH = "syn"
 ARCHIVE_FS_ROOT = ARCHIVE_FS_ROOT_NOSLASH + "/"
 
 BUILD_FS_ROOT   = "build/"    # build build folder
+LOG_FS_ROOT     = "logs/"     # log root folder
 
 INSTALL_ROOT_PATH = "/syn/"         # install all packages here
 SYNDB = INSTALL_ROOT_PATH + "pkgdb" # "database"
 LOCKF = INSTALL_ROOT_PATH + ".lock" # lock
 
-SYN_BIN_PKG_XTN     = "syn"         # pkg-1.0.BIN_PKG
-SYN_SRC_PKG_XTN     = "syn.tar.gz"  # pkg-1.0.SRC_PKG
+SYN_BIN_PKG_XTN     = "syn"
+SYN_SRC_PKG_XTN     = "syn.tar.gz"
+SYN_LOG_PKG_XTN     = "syn.logs"
 
 SYN_SRC_DIR         = "synd/"
 

@@ -28,8 +28,10 @@ def buildSourcePackage(package):
 	c.mkdir(build_root)
 	c.cd(build_root)
 	try:
-		build = Syn.build.build(ar)
+		( build, logs ) = Syn.build.build(ar)
 		c.cp(build, pop + "/" + build)
+		c.cp(logs , pop + "/" + logs)
+
 		ret = 0
 	except Syn.errors.BuildFailureException as e:
 		l.l(l.CRITICAL,"Failure to build!")
