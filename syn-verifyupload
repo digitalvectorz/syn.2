@@ -1,0 +1,23 @@
+#!/bin/bash
+# Paul Tagliamonte, GPLv3, 2011
+echo "Signing uploads."
+
+MDFIVE=`ls *.sigs`
+gpg --verify $MDFIVE
+
+if [ $? -ne 0 ]; then
+	echo "INVALID GPG SIG"
+	exit 1
+fi
+
+gpg --decrypt $MDFIVE > .verify
+md5sum -c .verify
+
+if [ $? -ne 0 ]; then
+	echo "INVALID MD5SUMS"
+	exit 2
+fi
+
+echo "All clear. Nice."
+
+exit 0
