@@ -22,7 +22,7 @@ HR_LOGLEVELS = {
 }
 
 DEFAULT   = MESSAGE
-VERBOSITY = CRITICAL
+VERBOSITY = DEFAULT
 
 def l(level, msg):
 	if level <= VERBOSITY:
