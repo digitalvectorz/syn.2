@@ -77,9 +77,16 @@ class SynDB:
 	def dump(self):
 		db = self._database;
 		for pkg in db:
-			print pkg + ": (" + str(db[pkg]["linked"]) + ")"
-			for v in db[pkg]["installed"]:
-				print "  " + v + ": " + HR_STATE[db[pkg]["installed"][v]['status']]
+			state = db[pkg]
+			print pkg + ":"
+			print "  Active Package Version: " + str(state['linked'])
+			print "  Registered Versions:"
+			for version in state['installed']:
+				print "    " + version + ":	" + Syn.db.HR_STATE[state['installed'][version]['status']]
+
+			#print pkg + ": (" + str(db[pkg]["linked"]) + ")"
+			#for v in db[pkg]["installed"]:
+			#	print "  " + v + ": " + HR_STATE[db[pkg]["installed"][v]['status']]
 			
 
 	def writeout(self):
