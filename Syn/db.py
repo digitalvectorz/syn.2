@@ -60,12 +60,12 @@ class SynDB:
 			return self.registerNewPackage(package, version, status)
 
 	def setState(self, package, version, status):
-		self._database[pkg]['linked'] = ver
 		Syn.log.l(Syn.log.PEDANTIC, "Setting %s (v%s) -- %s" % ( package, version, status ))
 		self._database[package]['installed'][version]['status'] = status
 
 	def setLinked(self, pkg, ver):
 		self.setState(pkg, ver, LINKED)
+		self._database[pkg]['linked'] = ver
 
 	def setUnlinked(self, pkg, ver):
 		self.setState(pkg, ver, INSTALLED)
@@ -73,6 +73,14 @@ class SynDB:
 
 	def sync(self):
 		self.writeout()
+
+	def dump(self):
+		db = self._database;
+		for pkg in db:
+			print pkg + ": (" + str(db[pkg]["linked"]) + ")"
+			for v in db[pkg]["installed"]:
+				print "  " + v + " " + HR_STATE[db[pkg]["installed"][v]['status']]
+			
 
 	def writeout(self):
 		Syn.log.l(Syn.log.PEDANTIC, "Writing DB!")

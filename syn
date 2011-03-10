@@ -32,6 +32,7 @@ parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
 parser.add_option( "-l", "--link",    dest = "link",    help = "Link a package into the filesystem" )
 parser.add_option( "-u", "--unlink",  dest = "unlink",  help = "Unlink a package into the filesystem" )
+parser.add_option( "-d", "--dbdump",  dest = "dbdump",  help = "Dump the database", action="store_true" )
 
 (options, args) = parser.parse_args()
 
@@ -62,9 +63,6 @@ if options.info:
 		l.l(l.CRITICAL,str(e))
 
 if options.query:
-	#db.registerNewPackage("bash", "4.2", "U")
-	#db.sync()
-
 	(package, version) = Syn.common.processFullID(options.query)
 	db = Syn.db.loadCanonicalDB()
 
@@ -136,3 +134,7 @@ if options.unlink:
 		l.l(l.CRITICAL,"*****")
 		l.l(l.CRITICAL,"You need to be root!")
 		l.l(l.CRITICAL,"*****")
+
+if options.dbdump:
+	db = Syn.db.loadCanonicalDB()
+	db.dump()
