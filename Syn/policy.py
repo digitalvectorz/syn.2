@@ -23,7 +23,23 @@ META_GOODTOHAVE = [
 	"upstream-bugtracker"
 ]
 
+LICENSE_CLEAN = [
+	"GPL",
+	"GPL-1",
+	"GPL-2",
+	"GPL-3",
+	"X11",
+	"MIT",
+	"PSFL-2"
+]
 
+LICENSE_TAINT = [
+	"nonfree"
+]
+
+
+# Do *not* let messages get longer then this handy ruler.
+# Please. I'll kill you.
 # |---------------------------------------------------------------------------|
 
 DESCRS = {
