@@ -52,8 +52,7 @@ def runCheck(tarbal, verify = False ): # We're going to do a stricter check
 			l.l(l.MESSAGE," status.")
 		else:
 			l.l(l.MESSAGE,"This package is *NOT* acceptable for something as")
-			l.l(l.MESSAGE," simple as a safe build and install. Please fix the")
-			l.l(l.MESSAGE," issues above.")
+			l.l(l.MESSAGE," simple as a simple install. Please fix the issues above.")
 		l.l(l.MESSAGE,"")
 
 		return ( sane, r_errs, n_errs, g_errs )
