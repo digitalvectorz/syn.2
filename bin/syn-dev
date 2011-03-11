@@ -17,7 +17,7 @@ import sys
 parser = OptionParser()
 
 parser.add_option( "-b", "--build",   dest = "build",   help = "Build a syn source ball" )
-parser.add_option( "-t", "--lint",    dest = "lint",    help = "Check the package for lint" )
+parser.add_option( "-l", "--lint",    dest = "lint",    help = "Check the package for lint" )
 parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
 parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a source package",
 	action = "store_true", default = False)

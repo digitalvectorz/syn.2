@@ -7,13 +7,16 @@
 from optparse import OptionParser
 
 import Syn.log as l
+import Syn.common
 import Syn.errors
 import Syn.db
 
 parser = OptionParser()
 
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
-parser.add_option( "-d", "--dbdump",  dest = "dbdump",  help = "Dump the database", action="store_true" )
+parser.add_option( "-l", "--list",    dest = "dbdump",  help = "Dump the database", action="store_true" )
+#parser.add_option( "--nuke-please-dont-use-me-at-all-damnit-this-is-bad",
+#	dest = "nuke",    help = "Nuke the DB",       action="store_true" )
 parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
 	action = "store_true", default = False)
 
@@ -44,3 +47,6 @@ if options.query:
 if options.dbdump:
 	db = Syn.db.loadCanonicalDB()
 	db.dump()
+
+#if options.nuke:
+#	Syn.db.strapDB()
