@@ -159,8 +159,9 @@ def build(ar):
 
 	upstream_archive = t.archive(sourceball)
 	upstream_archive.extractall()
-
-	c.cd(upstream_archive.getRootFolder())
+	hackdir = upstream_archive.getRootFolder()
+	l.l(l.MESSAGE,"Root directory resolved as: " + hackdir)
+	c.cd(hackdir)
 
 	setupBuildEnv(ar)
 
