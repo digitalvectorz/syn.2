@@ -96,3 +96,19 @@ def md5sumwd(check = os.getcwd()):
 			Syn.log.l(Syn.log.PEDANTIC, "  " + path + "/" + f)
 			ret[path + "/" + f] = Syn.verification.md5sum(path + "/" + f)
 	return ret
+
+def isInPath(path):
+	try:
+		pat = os.path.dirname(path)
+		ff = g.DEFAULT_PATH[pat]
+		return (True, ff)
+	except KeyError as e:
+		return (False, False)
+
+def isInLibPath(path):
+	try:
+		pat = os.path.dirname(path)
+		ff = g.DEFAULT_LIBS[pat]
+		return (True, ff)
+	except KeyError as e:
+		return (False, False)

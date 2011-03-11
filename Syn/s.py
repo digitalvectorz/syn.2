@@ -10,6 +10,7 @@ import Syn.Global  as g
 import Syn.build
 
 import os
+import os.path
 
 def putenv(key, value):
 	Syn.log.l(Syn.log.VERBOSE, "%s = %s" % (key, value))
@@ -49,3 +50,40 @@ def getBinaryMetadata(package):
 
 	return ar.getConf(g.SYN_BINARY_META)
 
+def gensum(ar):
+	if ar.getClass() != t.BINARY:
+		raise Syn.errors.InvalidArchiveException("Not a binary package")
+
+	metafile = ar.getConf(g.SYN_BINARY_FILESUMS)
+
+	report = {
+		"binary"       : {},
+		"local-binary" : {},
+		"lib"          : {},
+		"local-lib"    : {},
+	}
+
+	for x in metafile:
+		bpath = "/" + x[len(g.ARCHIVE_FS_ROOT):]
+		(path, good) = Syn.common.isInPath(bpath)
+		if path:
+			goodie = os.path.basename(bpath)
+			l.l(l.MESSAGE,"New binary! " + goodie)
+			if good:
+				report['binary'][goodie] = goodie
+				l.l(l.PEDANTIC,"New real binary")
+			else:
+				l.l(l.PEDANTIC,"New kludge binary")
+				report['local-binary'][goodie] = goodie
+
+		(path, good) = Syn.common.isInLibPath(bpath)
+		if path:
+			goodie = os.path.basename(bpath)
+			l.l(l.MESSAGE,"New library! " + goodie)
+			if good:
+				report['lib'][goodie] = goodie
+				l.l(l.PEDANTIC,"New real lib")
+			else:
+				l.l(l.PEDANTIC,"New kludge lib")
+				report['local-lib'][goodie] = goodie
+	return report

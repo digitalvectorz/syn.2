@@ -21,6 +21,7 @@ SYN_SRC_PKG_XTN     = "syn.tar.gz"
 SYN_LOG_PKG_XTN     = "syn.logs"
 
 SYN_SRC_DIR         = "synd/"
+SYN_GOODIE_FILE     = ".syn.goodies"
 
 SYN_BUILDDIR_SCRIPT = "build"      # build "rules" file
 SYN_BUILDDIR_CONFIG = "buildrc"    # build config file (flags)
@@ -45,6 +46,23 @@ SYN_BIN_LOAD_ON_LOAD = [
 
 SYN_SRC_TO_BIN_FILESPEC = {
 	SYN_SRC_DIR + SYN_BUILDDIR_META : ARCHIVE_FS_ROOT + SYN_BINARY_META
+}
+
+DEFAULT_PATH = {
+	"/bin"             : True,
+	"/usr/bin"         : True,
+	"/usr/games"       : True,
+	"/usr/local/bin"   : False,
+	"/usr/local/games" : False,
+}
+
+DEFAULT_LIBS = {
+	"/lib"             : True,
+	"/lib64"           : True,
+	"/usr/lib"         : True,
+	"/usr/lib64"       : True,
+	"/usr/local/lib"   : False,
+	"/usr/local/lib64" : False
 }
 
 SYN_XTRACT_META      = "metainf"    # metainf in the filesystem
