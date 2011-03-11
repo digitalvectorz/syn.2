@@ -15,10 +15,10 @@ def checkFields(attrs, meta):
 		try:
 			good = meta[a]
 		except KeyError as e:
-			print "================================================================================"
-			print "          Missing Field: " + a
-			print "================================================================================"
-			print Syn.policy.DESCRS[a]
+			l.p( "================================================================================")
+			l.p( "          Missing Field: " + a)
+			l.p( "================================================================================")
+			l.p( Syn.policy.DESCRS[a])
 			errs += 1
 	return errs
 
@@ -43,47 +43,45 @@ def binaryCheck( ar ):
 
 
 def runCheck(tarbal): # We're going to do a stricter check
-	try:
-		ar = t.archive(tarbal, verify = False)
-		if ar.getClass() == t.BINARY:
-			( r_errs, n_errs, g_errs ) = binaryCheck(ar)
-		elif ar.getClass() == t.SOURCE:
-			( r_errs, n_errs, g_errs ) = sourceCheck(ar)
-		else:
-			l.l(l.CRITICAL,"WTF Is this I don't even")
-			return -1
+	ar = t.archive(tarbal, verify = False)
+	if ar.getClass() == t.BINARY:
+		( r_errs, n_errs, g_errs ) = binaryCheck(ar)
+	elif ar.getClass() == t.SOURCE:
+		( r_errs, n_errs, g_errs ) = sourceCheck(ar)
+	else:
+		l.l(l.CRITICAL,"WTF Is this I don't even")
+		raise Syn.errors.InvalidArchiveException("Unknown audit.")
 
-		sane  = False
-		clean = False
+	sane  = False
+	clean = False
 
-		if r_errs + n_errs == 0:
-			sane  = True
-			clean = True
+	if r_errs + n_errs == 0:
+		sane  = True
+		clean = True
 
-		if r_errs == 0:
-			sane = True
+	if r_errs == 0:
+		sane = True
 
-		l.l(l.MESSAGE,"Errors:")
+	l.l(l.MESSAGE,"Errors:")
+	l.l(l.MESSAGE,"")
+	l.l(l.MESSAGE,"    Serious:  " + str(r_errs))
+	l.l(l.MESSAGE,"  Important:  " + str(n_errs))
+	l.l(l.MESSAGE,"   Pedantic:  " + str(g_errs))
+	l.l(l.MESSAGE,"")
+
+	if clean:
+		l.l(l.MESSAGE,"This package is acceptable to build. Check with")
+		l.l(l.MESSAGE," your friendly project developer about it's archive")
+		l.l(l.MESSAGE," status.")
 		l.l(l.MESSAGE,"")
-		l.l(l.MESSAGE,"    Serious:  " + str(r_errs))
-		l.l(l.MESSAGE,"  Important:  " + str(n_errs))
-		l.l(l.MESSAGE,"   Pedantic:  " + str(g_errs))
+	elif sane:
+		l.l(l.MESSAGE,"This package is acceptable for basic, unofficial use.")
+		l.l(l.MESSAGE," It's not in shipp-able format, but it's OK to use")
+		l.l(l.MESSAGE," locally.")
+		l.l(l.MESSAGE,"")
+	else:
+		l.l(l.MESSAGE,"This package is *NOT* acceptable for something as")
+		l.l(l.MESSAGE," simple as a simple install. Please fix the issues above.")
 		l.l(l.MESSAGE,"")
 
-		if clean:
-			l.l(l.MESSAGE,"This package is acceptable to build. Check with")
-			l.l(l.MESSAGE," your friendly project developer about it's archive")
-			l.l(l.MESSAGE," status.")
-			l.l(l.MESSAGE,"")
-		elif sane:
-			l.l(l.MESSAGE,"This package is acceptable for basic, unofficial use.")
-			l.l(l.MESSAGE," It's not in shipp-able format, but it's OK to use")
-			l.l(l.MESSAGE," locally.")
-			l.l(l.MESSAGE,"")
-		else:
-			l.l(l.MESSAGE,"This package is *NOT* acceptable for something as")
-			l.l(l.MESSAGE," simple as a simple install. Please fix the issues above.")
-			l.l(l.MESSAGE,"")
-
-	except Syn.errors.SynException as e:
-		l.l(l.CRITICAL, str(e))
+	return ( r_errs, n_errs, g_errs )

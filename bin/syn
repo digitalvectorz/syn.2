@@ -50,14 +50,21 @@ if options.verbose:
 
 if options.roll:
 	print "Starting build!"
+
+	if l.VERBOSITY <= l.LOG:
+		print "It's unwise to run a build without `-o' or `--loud'!!"
+
 	try:
 		pkg = Syn.bundle.bundleSource(".")
+		( r_errs, n_errs, g_errs ) = Syn.synlint.runCheck(pkg)
+
 		print "We're bundled. Running a test build now."
 
 		if syn.buildSourcePackage(pkg) != 0:
 			l.l(l.CRITICAL,"Failure to build!")
 		else:
 			l.l(l.CRITICAL,"Built with success!")
+
 	except Syn.errors.InvalidArchiveException as e:
 		l.l(l.CRITICAL,str(e))
 

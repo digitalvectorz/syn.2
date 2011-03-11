@@ -92,6 +92,20 @@ def package(metainf):
 		t.BINARY
 	)
 
+	( r_errs, n_errs, g_errs ) = Syn.synlint.runCheck(b_pth)
+
+	errs  = "Errors (on the binary)\n"
+	errs += "\n"
+	errs += "Report for:"
+	errs += "  " + pkg + "-" + ver
+	errs += "\n"
+	errs += "    Serious:  " + str(r_errs) + "\n"
+	errs += "  Important:  " + str(n_errs) + "\n"
+	errs += "   Pedantic:  " + str(g_errs) + "\n"
+	errs += "\n"
+
+	logLog("./", "synlint", errs)
+
 	ar = t.newArchive(
 		[ g.LOG_FS_ROOT ],
 		l_pth,

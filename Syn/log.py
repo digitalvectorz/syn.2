@@ -21,10 +21,14 @@ HR_LOGLEVELS = {
 	PEDANTIC : "Pedantic "
 }
 
-DEFAULT   = MESSAGE
+DEFAULT   = HIGH
 VERBOSITY = DEFAULT
 
 def l(level, msg):
 	if level <= VERBOSITY:
 		print "[l] (" + HR_LOGLEVELS[level] + "): " + msg;
+def p(msg):
+	level = NOTICE
+	if level <= VERBOSITY:
+		print msg
 
