@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+#
+# Copyright (c) Paul Tagliamonte
+# GNU GPL-3+, 2011
+#
+
+from optparse import OptionParser
+
+import Syn.log as l
+import Syn.errors
+import Syn.db
+
+parser = OptionParser()
+
+parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
+parser.add_option( "-d", "--dbdump",  dest = "dbdump",  help = "Dump the database", action="store_true" )
+parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
+	action = "store_true", default = False)
+
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+	Syn.log.VERBOSITY = Syn.log.PEDANTIC
+
+if options.query:
+	(package, version) = Syn.common.processFullID(options.query)
+	db = Syn.db.loadCanonicalDB()
+
+	try:
+		if version != None:
+			state = db.queryState(package, version)
+			print package + ":	" + Syn.db.HR_STATE[state['status']]
+		else:
+			state = db.queryGState(package)
+			print "Active Package Version: " + str(state['linked'])
+			print "Registered Versions:"
+			for version in state['installed']:
+				print "  " + version + ":	" + Syn.db.HR_STATE[state['installed'][version]['status']]
+
+	except Syn.errors.PackageNotFoundException as e:
+		l.l(l.CRITICAL, str(e))
+
+if options.dbdump:
+	db = Syn.db.loadCanonicalDB()
+	db.dump()

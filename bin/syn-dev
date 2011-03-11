@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+#
+# Copyright (c) Paul Tagliamonte
+# GNU GPL-3+, 2011
+#
+
+from optparse import OptionParser
+
+import Syn.log as l
+import Syn.s   as syn
+import Syn.errors
+import Syn.synlint
+import Syn.bundle
+
+import sys
+
+parser = OptionParser()
+
+parser.add_option( "-b", "--build",   dest = "build",   help = "Build a syn source ball" )
+parser.add_option( "-t", "--lint",    dest = "lint",    help = "Check the package for lint" )
+parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
+parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a source package",
+	action = "store_true", default = False)
+parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
+	action = "store_true", default = False)
+
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+	Syn.log.VERBOSITY = Syn.log.PEDANTIC
+
+if options.roll:
+	print "Starting build!"
+
+	if l.VERBOSITY <= l.LOG:
+		print "It's unwise to run a build without `-o' or `--loud'!!"
+		print "You *will* miss out on synlint checks. Rest assured."
+
+	try:
+		pkg = Syn.bundle.bundleSource(".")
+		( r_errs, n_errs, g_errs ) = Syn.synlint.runCheck(pkg)
+
+		print "We're bundled. Running a test build now."
+
+		if syn.buildSourcePackage(pkg) != 0:
+			l.l(l.CRITICAL,"Failure to build!")
+		else:
+			l.l(l.CRITICAL,"Built with success!")
+
+	except Syn.errors.InvalidArchiveException as e:
+		l.l(l.CRITICAL,str(e))
+
+if options.lint:
+	if l.VERBOSITY <= l.LOG:
+		print "It's stupid to run lint without `-o' or `--loud'."
+		print "Unless you're a robot. Then you don't understand this."
+		print "Or you do, but you don't have hurt feelings. No emotions, bitch."
+
+	(r_errs, n_errs, g_errs) = Syn.synlint.runCheck(options.lint)
+
+	clean = False
+	if r_errs + n_errs == 0:
+		clean = True
+
+	if clean:
+		sys.exit(0)
+	else:
+		sys.exit(1)
+
+if options.build:
+	try:
+		print "Building package. Please hold."
+		if syn.buildSourcePackage(options.build) != 0:
+			l.l(l.CRITICAL,"Failure to build!")
+		else:
+			l.l(l.CRITICAL,"Built with success!")
+	except Syn.errors.InvalidArchiveException as e:
+		l.l(l.CRITICAL,str(e))
+if options.verify:
+	try:
+		Syn.tarball.archive(options.verify, verify=True, inPlace=False)
+	except Syn.errors.SynException as e:
+		l.l(l.CRITICAL,str(e))
+
