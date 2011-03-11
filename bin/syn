@@ -80,7 +80,6 @@ if options.lint:
 	(r_errs, n_errs, g_errs) = Syn.synlint.runCheck(options.lint)
 
 	clean = False
-
 	if r_errs + n_errs == 0:
 		clean = True
 
