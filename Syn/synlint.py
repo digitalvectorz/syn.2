@@ -35,9 +35,14 @@ def runCheck(tarbal, verify = False ): # We're going to do a stricter check
 		n_errs = checkFields(Syn.policy.META_NEEDED,     metafile)
 		g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile)
 
-		sane = False
+		sane  = False
+		clean = False
 
 		if r_errs + n_errs == 0:
+			sane  = True
+			clean = True
+
+		if r_errs == 0:
 			sane = True
 
 		l.l(l.MESSAGE,"Errors:")
@@ -46,10 +51,15 @@ def runCheck(tarbal, verify = False ): # We're going to do a stricter check
 		l.l(l.MESSAGE,"Important:  " + str(n_errs))
 		l.l(l.MESSAGE," Pedantic:  " + str(g_errs))
 		l.l(l.MESSAGE,"")
-		if sane:
-			l.l(l.MESSAGE,"This package is acceptable to build. Check with")
+
+		if clean:
+			l.l(l.MESSAGE,"This package is acceptable to install. Check with")
 			l.l(l.MESSAGE," your friendly project developer about it's archive")
 			l.l(l.MESSAGE," status.")
+		elif sane:
+			l.l(l.MESSAGE,"This package is acceptable for basic, unofficial use.")
+			l.l(l.MESSAGE," It's not in shipp-able format, but it's OK to use")
+			l.l(l.MESSAGE," locally.")
 		else:
 			l.l(l.MESSAGE,"This package is *NOT* acceptable for something as")
 			l.l(l.MESSAGE," simple as a simple install. Please fix the issues above.")
