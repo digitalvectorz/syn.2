@@ -20,7 +20,7 @@ parser = OptionParser()
 parser.add_option( "-b", "--build",   dest = "build",   help = "Build a syn source ball" )
 parser.add_option( "-l", "--lint",    dest = "lint",    help = "Check the package for lint" )
 parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
-parser.add_option( "-s", "--summery", dest = "summery", help = "Gen package kickass file" )
+parser.add_option( "-s", "--summary", dest = "summary", help = "Gen package kickass file" )
 
 parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a source package",
 	action = "store_true", default = False)
@@ -72,9 +72,9 @@ if options.lint:
 	else:
 		sys.exit(1)
 
-if options.summery:
+if options.summary:
 	try:
-		ar = Syn.tarball.archive(options.summery)
+		ar = Syn.tarball.archive(options.summary)
 		summery = syn.gensum(ar)
 		metafile = ar.getConf(g.SYN_BINARY_META)
 

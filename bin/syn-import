@@ -1,0 +1,37 @@
+#!/bin/bash
+# to import a package
+# with the template files
+# and such
+
+TEMPLATE_SYN_DIR="/usr/share/syn/synd"
+
+pkg=$2
+pkgname_guess=`basename $pkg | sed s/-.*//g`
+pkgvers_guess=`basename $pkg | sed s/.*-//g`
+
+pop=`pwd`
+cd `dirname $1`
+dirski=`pwd`
+cd $pop
+
+
+mkdir $pkgname_guess
+cd $pkgname_guess
+mkdir $pkg
+cd $pkg
+
+cp $dirski/$1 .
+
+pid=`basename $1`
+
+mkdir synd
+cd synd
+cp $TEMPLATE_SYN_DIR/* .
+cat $TEMPLATE_SYN_DIR/meta | sed s/{PKG}/$pid/g | \
+	sed s/{PKGNAME}/$pkgname_guess/g | \
+	sed s/{PKGVER}/$pkgvers_guess/g > meta
+
+echo ""
+echo "Syn files pushed in and configured as much as I can do."
+echo "Please edit meta and buildrc before you do anything."
+echo ""
