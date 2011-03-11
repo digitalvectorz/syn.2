@@ -5,20 +5,20 @@
 #
 
 from optparse import OptionParser
-import Syn.s as syn
+
 import Syn.log as l
-import Syn.db
+import Syn.s   as syn
 import Syn.errors
 import Syn.install
+import Syn.synlint
 import Syn.bundle
 import Syn.link
+import Syn.db
 
 attrs = [
 	"package",
 	"version",
 	"description",
-#	"homepage",
-#	"download",
 	"maintainer",
 	"deps",
 ]
@@ -31,12 +31,14 @@ parser.add_option( "-n", "--info",    dest = "info",    help = "Read binary pack
 parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
 parser.add_option( "-l", "--link",    dest = "link",    help = "Link a package into the filesystem" )
 parser.add_option( "-u", "--unlink",  dest = "unlink",  help = "Unlink a package into the filesystem" )
-parser.add_option( "-d", "--dbdump",  dest = "dbdump",  help = "Dump the database", action="store_true" )
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
+parser.add_option( "-t", "--lint",    dest = "lint",    help = "Check the package for lint" )
 
+
+parser.add_option( "-d", "--dbdump",  dest = "dbdump",  help = "Dump the database",
+	action="store_true" )
 parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a source package",
 	action = "store_true", default = False)
-
 parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
 	action = "store_true", default = False)
 
@@ -58,6 +60,9 @@ if options.roll:
 			l.l(l.CRITICAL,"Built with success!")
 	except Syn.errors.InvalidArchiveException as e:
 		l.l(l.CRITICAL,str(e))
+
+if options.lint:
+	Syn.synlint.runCheck(options.lint)
 
 if options.build:
 	try:
