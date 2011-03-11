@@ -15,6 +15,8 @@ import Syn.bundle
 import Syn.link
 import Syn.db
 
+import sys
+
 attrs = [
 	"package",
 	"version",
@@ -53,6 +55,7 @@ if options.roll:
 
 	if l.VERBOSITY <= l.LOG:
 		print "It's unwise to run a build without `-o' or `--loud'!!"
+		print "You *will* miss out on synlint checks. Rest assured."
 
 	try:
 		pkg = Syn.bundle.bundleSource(".")
@@ -69,7 +72,22 @@ if options.roll:
 		l.l(l.CRITICAL,str(e))
 
 if options.lint:
-	Syn.synlint.runCheck(options.lint)
+	if l.VERBOSITY <= l.LOG:
+		print "It's stupid to run lint without `-o' or `--loud'."
+		print "Unless you're a robot. Then you don't understand this."
+		print "Or you do, but you don't have hurt feelings. No emotions, bitch."
+
+	(r_errs, n_errs, g_errs) = Syn.synlint.runCheck(options.lint)
+
+	clean = False
+
+	if r_errs + n_errs == 0:
+		clean = True
+
+	if clean:
+		sys.exit(0)
+	else:
+		sys.exit(1)
 
 if options.build:
 	try:

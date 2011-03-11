@@ -97,7 +97,7 @@ def package(metainf):
 	errs  = "Errors (on the binary)\n"
 	errs += "\n"
 	errs += "Report for:"
-	errs += "  " + pkg + "-" + ver
+	errs += " " + pkg + "-" + ver
 	errs += "\n"
 	errs += "    Serious:  " + str(r_errs) + "\n"
 	errs += "  Important:  " + str(n_errs) + "\n"
