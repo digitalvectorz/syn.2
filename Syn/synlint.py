@@ -6,7 +6,9 @@
 import Syn.tarball as t
 import Syn.log     as l
 import Syn.Global  as g
+import Syn.common
 import Syn.policy
+import os
 
 
 def checkFields(attrs, meta):
@@ -24,26 +26,21 @@ def checkFields(attrs, meta):
 
 def sourceCheck( ar ):
 	metafile = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META)
-
 	r_errs = checkFields(Syn.policy.META_REQUIRED,   metafile)
 	n_errs = checkFields(Syn.policy.META_NEEDED,     metafile)
 	g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile)
-
 	return ( r_errs, n_errs, g_errs )
 
 
 def binaryCheck( ar ):
 	metafile = ar.getConf(g.SYN_BINARY_META)
-
 	r_errs = checkFields(Syn.policy.META_REQUIRED,   metafile)
 	n_errs = checkFields(Syn.policy.META_NEEDED,     metafile)
 	g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile)
-
 	return ( r_errs, n_errs, g_errs )
 
 
-def runCheck(tarbal): # We're going to do a stricter check
-	ar = t.archive(tarbal, verify = False)
+def metafileCheck(ar):
 	if ar.getClass() == t.BINARY:
 		( r_errs, n_errs, g_errs ) = binaryCheck(ar)
 	elif ar.getClass() == t.SOURCE:
@@ -83,5 +80,38 @@ def runCheck(tarbal): # We're going to do a stricter check
 		l.l(l.MESSAGE,"This package is *NOT* acceptable for something as")
 		l.l(l.MESSAGE," simple as a simple install. Please fix the issues above.")
 		l.l(l.MESSAGE,"")
+	return ( r_errs, n_errs, g_errs )
+
+def runLibraryCheck(ar):
+	if ar.getClass() != t.BINARY:
+		l.l(l.PEDANTIC,"Not running library checks -- tis a source package.")
+		return None
+
+	wd = os.getcwd()
+
+	workdir = Syn.common.getTempLocation()
+	Syn.common.mkdir(workdir)
+	Syn.common.cd(workdir)
+
+	crappy = ar.getRootFolder()
+	ar.extractall()
+	Syn.common.cd(crappy)
+
+	mapers = Syn.common.md5sumwd(".")
+	for f in mapers:
+		fpath = f[1:] # remove the .
+		(bin,local) = Syn.common.isInPath(fpath)
+		if bin:
+			print "run ldd on " + fpath
+
+	Syn.common.cd(wd)
+	Syn.common.rmdir(workdir)
+	
+
+def runCheck(tarbal): # We're going to do a stricter check
+	ar = t.archive(tarbal, verify = False)
+
+	( r_errs, n_errs, g_errs ) = metafileCheck(ar)
+	# errs                       = runLibraryCheck(ar)
 
 	return ( r_errs, n_errs, g_errs )

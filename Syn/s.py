@@ -50,6 +50,9 @@ def getBinaryMetadata(package):
 
 	return ar.getConf(g.SYN_BINARY_META)
 
+def run(cmd):
+	return commands.getstatusoutput(cmd)
+
 def gensum(ar):
 	if ar.getClass() != t.BINARY:
 		raise Syn.errors.InvalidArchiveException("Not a binary package")

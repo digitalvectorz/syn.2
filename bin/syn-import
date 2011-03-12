@@ -35,3 +35,4 @@ echo ""
 echo "Syn files pushed in and configured as much as I can do."
 echo "Please edit meta and buildrc before you do anything."
 echo ""
+

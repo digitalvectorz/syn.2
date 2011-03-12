@@ -189,3 +189,4 @@ def build(ar):
 	( binary, log ) = package(metainf)
 
 	return ( binary, log )
+
