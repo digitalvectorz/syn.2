@@ -7,8 +7,10 @@ import Syn.tarball as t
 import Syn.log     as l
 import Syn.Global  as g
 import Syn.common
+import Syn.s
 import Syn.policy
 import os
+
 
 
 def checkFields(attrs, meta):
@@ -81,38 +83,7 @@ def metafileCheck(ar):
 		l.l(l.MESSAGE,"")
 	return ( r_errs, n_errs, g_errs )
 
-def runLibraryCheck(ar):
-	if ar.getClass() != t.BINARY:
-		l.l(l.PEDANTIC,"Not running library checks -- tis a source package.")
-		return None
-
-	wd = os.getcwd()
-
-	workdir = Syn.common.getTempLocation()
-	Syn.common.mkdir(workdir)
-	Syn.common.cd(workdir)
-
-	crappy = ar.getRootFolder()
-	ar.extractall()
-	Syn.common.cd(crappy)
-
-	mapers = Syn.common.md5sumwd(".")
-	lds    = {}
-
-	for f in mapers:
-		fpath = f[1:] # remove the .
-		(bin,local) = Syn.common.isInPath(fpath)
-		if bin:
-			lds[fpath] = fpath
-
-	Syn.common.cd(wd)
-	Syn.common.rmdir(workdir)
-	return lds
-
 def runCheck(tarbal): # We're going to do a stricter check
 	ar = t.archive(tarbal, verify = False)
-
 	( r_errs, n_errs, g_errs ) = metafileCheck(ar)
-	lds                        = runLibraryCheck(ar)
-
 	return ( r_errs, n_errs, g_errs )

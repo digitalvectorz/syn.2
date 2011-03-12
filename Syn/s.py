@@ -9,8 +9,12 @@ import Syn.log     as l
 import Syn.Global  as g
 import Syn.build
 
-import os
+import commands
+
 import os.path
+import os
+
+import json
 
 def putenv(key, value):
 	Syn.log.l(Syn.log.VERBOSE, "%s = %s" % (key, value))
@@ -52,6 +56,35 @@ def getBinaryMetadata(package):
 
 def run(cmd):
 	return commands.getstatusoutput(cmd)
+
+def genLibraryLinks(ar):
+	if ar.getClass() != t.BINARY:
+		l.l(l.PEDANTIC,"Not running library checks -- tis a source package.")
+		return None
+
+	wd = os.getcwd()
+
+	workdir = Syn.common.getTempLocation()
+	Syn.common.mkdir(workdir)
+	Syn.common.cd(workdir)
+
+	crappy = ar.getRootFolder()
+	ar.extractall()
+	Syn.common.cd(crappy)
+
+	mapers = Syn.common.md5sumwd(".")
+	lds    = {}
+
+	for f in mapers:
+		fpath = f[1:] # remove the .
+		(bin,local) = Syn.common.isInPath(fpath)
+		if bin:
+			(status, spew) = Syn.s.run("syn-ldd " + f)
+			lds[fpath] = json.loads(spew)
+
+	Syn.common.cd(wd)
+	Syn.common.rmdir(workdir)
+	return lds
 
 def gensum(ar):
 	if ar.getClass() != t.BINARY:

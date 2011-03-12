@@ -4,7 +4,14 @@ out=`ldd $1`
 if [ $? -ne 0 ]; then
 	exit 1
 else
-	echo "["
-	echo "$out" | awk '{print "    \""$1"\","}'
-	echo "]"
+	out=`echo "$out" | awk '{print " \""$1"\","}'`
+
+	FROB=""
+	FROB="$FROB["
+	FROB="$FROB$out"
+	FROB="$FROB]"
 fi
+
+
+echo $FROB | tr -d "\n" | tr -d " " | sed s/,\]/\]/g
+

@@ -65,13 +65,21 @@ if options.lint:
 if options.summary:
 	try:
 		ar = Syn.tarball.archive(options.summary)
+
 		summery = syn.gensum(ar)
+		links   = syn.genLibraryLinks(ar)
+
+		sumfile = {
+			"summery" : summery,
+			"links"   : links
+		}
+
 		metafile = ar.getConf(g.SYN_BINARY_META)
 
 		pkg = metafile['package'] + "-" + metafile['version']
 
 		f = open(pkg + g.SYN_GOODIE_FILE, 'w')
-		f.write(json.dumps(summery, sort_keys = True, indent = 4))
+		f.write(json.dumps(sumfile, sort_keys = True, indent = 4))
 		f.close()
 
 	except Syn.errors.SynException as e:
