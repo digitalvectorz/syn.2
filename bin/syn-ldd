@@ -1,0 +1,10 @@
+#!/bin/bash
+
+out=`ldd $1`
+if [ $? -ne 0 ]; then
+	exit 1
+else
+	echo "["
+	echo "$out" | awk '{print "    \""$1"\","}'
+	echo "]"
+fi

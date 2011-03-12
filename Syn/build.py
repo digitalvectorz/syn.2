@@ -120,7 +120,7 @@ def logLog(root, logname, text):
 	header += "================================================================================\n"
 	header += "\n"
 
-	text = header + text
+	text = str(header) + str(text)
 
 	fd = open(root + "/" + g.LOG_FS_ROOT + logname, 'w')
 	fd.write(text)

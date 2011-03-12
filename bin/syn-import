@@ -13,6 +13,7 @@ pop=`pwd`
 cd `dirname $1`
 dirski=`pwd`
 cd $pop
+#echo $dirski
 
 
 mkdir $pkgname_guess
@@ -20,9 +21,8 @@ cd $pkgname_guess
 mkdir $pkg
 cd $pkg
 
-cp $dirski/$1 .
-
 pid=`basename $1`
+cp $dirski/$pid .
 
 mkdir synd
 cd synd

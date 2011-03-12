@@ -31,7 +31,6 @@ def sourceCheck( ar ):
 	g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile)
 	return ( r_errs, n_errs, g_errs )
 
-
 def binaryCheck( ar ):
 	metafile = ar.getConf(g.SYN_BINARY_META)
 	r_errs = checkFields(Syn.policy.META_REQUIRED,   metafile)
@@ -98,20 +97,22 @@ def runLibraryCheck(ar):
 	Syn.common.cd(crappy)
 
 	mapers = Syn.common.md5sumwd(".")
+	lds    = {}
+
 	for f in mapers:
 		fpath = f[1:] # remove the .
 		(bin,local) = Syn.common.isInPath(fpath)
 		if bin:
-			print "run ldd on " + fpath
+			lds[fpath] = fpath
 
 	Syn.common.cd(wd)
 	Syn.common.rmdir(workdir)
-	
+	return lds
 
 def runCheck(tarbal): # We're going to do a stricter check
 	ar = t.archive(tarbal, verify = False)
 
 	( r_errs, n_errs, g_errs ) = metafileCheck(ar)
-	# errs                       = runLibraryCheck(ar)
+	lds                        = runLibraryCheck(ar)
 
 	return ( r_errs, n_errs, g_errs )
