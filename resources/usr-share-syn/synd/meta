@@ -5,7 +5,8 @@
     },
 
     "description" : "Please describe {PKGNAME} in a single sentience.",
-    "homepage"   : "http://domain.tld/{PKG}/about.html",
+    "homepage"    : "http://domain.tld/{PKG}/about.html",
+    "download"    : "http://{PKGNAME}.com/download/{PKG}",
 
     "package"    : "{PKGNAME}",
     "version"    : "{PKGVER}",
@@ -26,6 +27,10 @@
             "license" : "non-free"
         }
     },
+
+    "upstream-vcs"         : "git://{PKGNAME}.com/{PKGNAME}.git",
+    "upstream-bugtracker"  : "http://bugs.{PKGNAME}.com/",
+
     "build-deps" : [],
     "deps"       : []
 }
