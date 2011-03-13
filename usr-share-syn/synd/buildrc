@@ -1,0 +1,18 @@
+{
+	"configure" : "./configure", 
+	"build"     : "make", 
+	"stage"     : "make install", 
+
+	"ConfigFlags" : [
+		"--prefix=/usr"
+	],
+
+	"BuildFlags" : [
+		"-j3"
+	],
+
+	"StageFlags" : [
+
+	]
+
+}

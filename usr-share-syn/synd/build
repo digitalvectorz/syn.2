@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+# Sample synd/build file
+# This file was originally written by Paul Tagliamonte
+# This concept was totally jacked from debhelper. I do
+# love Debian. 
+
+include /usr/share/syn/build/synhelper.mk
+

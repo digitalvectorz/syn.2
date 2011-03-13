@@ -1,0 +1,39 @@
+{
+    "maintainer" : {
+        "email"  : "jhacker@example.tld", 
+        "name"   : "John Q. Hacker"
+    }, 
+
+    "description" : "Please describe your package here..", 
+    "download"    : "http://domain.tld/{PKG}",
+
+    "vcs" : {
+        "type"   : "git",
+        "co-url" : "git://example.com/{PKGNAME}.git",
+        "browse" : "http://git.example.com/?a=summary&p={PKGNAME}"
+    },
+
+    "license" : {
+        "*" : {
+            "terms"  : "non-free",
+            "author" : "Joe Shmo, et. al"
+        },
+        "synd/*" : {
+            "terms"  : "non-free",
+            "author" : "John Q. Hacker"
+        }
+    },
+
+    "build-deps" : [
+    ],
+
+    "deps" : [
+        "libc"
+    ],
+
+    "upstream-vcs"        : "git://{PKGNAME}.com/{PKGNAME}.git",
+    "upstream-bugtracker" : "http://bugs.{PKGNAME}.com/",
+
+    "package" : "{PKGNAME}", 
+    "version" : "{PKGVER}"
+}
