@@ -1,0 +1,31 @@
+{
+    "maintainer" : {
+        "email" : "jhacker@domain.tld",
+        "name"  : "John Q. Hacker"
+    },
+
+    "description" : "Please describe {PKGNAME} in a single sentience.",
+    "homepage"   : "http://domain.tld/{PKG}/about.html",
+
+    "package"    : "{PKGNAME}",
+    "version"    : "{PKGVER}",
+
+    "vcs" : {
+        "co"   : "git://domain.tld/{PKGNAME}.git",
+        "type" : "git",
+        "view" : "http://git.domain.tld/?a=summary&p={PKGNAME}"
+    },
+
+    "license" : {
+        "*" : {
+            "author"  : "{PKGNAME} team",
+            "license" : "non-free"
+        },
+        "synd/*" : {
+            "author"  : "John Q. Hacker",
+            "license" : "non-free"
+        }
+    },
+    "build-deps" : [],
+    "deps"       : []
+}

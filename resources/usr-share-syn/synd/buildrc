@@ -1,0 +1,9 @@
+{
+	"configure"   : "./configure", 
+	"build"       : "make", 
+	"stage"       : "make install", 
+	"ConfigFlags" : [],
+	"BuildFlags"  : [],
+	"StageFlags"  : []
+
+}
