@@ -16,8 +16,8 @@ cd $pop
 #echo $dirski
 
 
-mkdir $pkgname_guess
-cd $pkgname_guess
+mkdir $pkg
+cd $pkg
 mkdir $pkg
 cd $pkg
 

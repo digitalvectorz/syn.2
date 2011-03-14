@@ -56,16 +56,21 @@ def xists(loc):
 	return os.path.exists(loc)
 
 def rmdir(dirs):
-	shutil.rmtree(dirs)
 	Syn.log.l(Syn.log.PEDANTIC, "rmdir " + dirs)
+	shutil.rmtree(dirs)
 
 def rm(dirs):
-	os.remove(dirs)
 	Syn.log.l(Syn.log.PEDANTIC, "rm " + dirs)
+	os.remove(dirs)
 
 def ln(source, dest):
-	os.symlink(source, dest)
+	dirski = os.path.dirname(dest)
+	if not xists(dirski):
+		Syn.log.l(Syn.log.PEDANTIC, "Can't find it's basedir. Creating it")
+		mkdir(dirski)
+
 	Syn.log.l(Syn.log.PEDANTIC, "ln " + source + " to " + dest)
+	os.symlink(source, dest)
 
 def dict_diff(first, second):
 	diff = {}
