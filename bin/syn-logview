@@ -3,7 +3,7 @@
 BaseCMD="dialog --backtitle syn-logview"
 CMD="$BaseCMD --menu Logs 0 0 0"
 
-FILES=`tar --list -f bash-4.2.syn.logs | grep -v logs/$`
+FILES=`tar --list -f *.logs | grep -v logs/$`
 
 STRING=""
 
