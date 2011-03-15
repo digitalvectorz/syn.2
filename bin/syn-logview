@@ -1,7 +1,33 @@
 #!/bin/bash
 
-LOG="$1"
+BaseCMD="dialog --backtitle syn-logview"
+CMD="$BaseCMD --menu Logs 0 0 0"
+
+FILES=`tar --list -f bash-4.2.syn.logs | grep -v logs/$`
+
+STRING=""
+
+for f in $FILES; do
+	STRING="$STRING $f view"
+done
+
+CMD="$CMD $STRING"
+
+stamp=`date +%s`
+
+$CMD 2>/tmp/syn-dialog.$stamp.ans
+
+if [ $? -ne 0 ]; then
+	clear
+	exit 1
+fi
+
+clear
+view=`cat /tmp/syn-dialog.$stamp.ans`
+rm /tmp/syn-dialog.$stamp.ans
+
+LOG="$view"
 LOGARCH=`ls *.logs`
-CMD="tar -f $LOGARCH -x logs/$LOG -O"
+CMD="tar -f $LOGARCH -x $view -O"
 
 $CMD | less
