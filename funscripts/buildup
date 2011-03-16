@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ -e *deb ]; then
+	rm *deb
+fi
+
+if [ -d syn ]; then
+	rm -rf syn
+fi
+
+apt-get download $1
+mkdir syn
+dpkg-deb -x *.deb syn/
+metainf=`dpkg-deb -I *.deb`
+
+descr=`echo "$metainf" | grep Description | sed s/\ Description:\ //g`
+maint=`echo "$metainf" | grep Maintainer: | sed s/\ Maintainer:\ //g`
+name=`echo $maint | sed s/\<.*\>//g`
+email=`echo $maint | sed s/.*\<//g | tr -d ">"`
+pkg=`echo "$metainf" | grep Package: | sed s/\ Package:\ //g`
+ver=`echo "$metainf" | grep Version: | sed s/\ Version:\ //g`
+
+echo "Descr: $descr"
+echo "Maint: $maint"
+echo " Name: $name"
+echo "Email: $email"
+echo "Packg: $pkg"
+echo "Versn: $ver"
