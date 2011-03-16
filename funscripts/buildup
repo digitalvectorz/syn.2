@@ -19,6 +19,9 @@ name=`echo $maint | sed s/\<.*\>//g`
 email=`echo $maint | sed s/.*\<//g | tr -d ">"`
 pkg=`echo "$metainf" | grep Package: | sed s/\ Package:\ //g`
 ver=`echo "$metainf" | grep Version: | sed s/\ Version:\ //g`
+deps=`echo "$metainf" | grep ^\ Depends:\ | sed s/\ Depends:\ //g | sed -r 's/\(.[^)]*\)//g' | sed s/[\ ]*//g`
+
+JSONDeps="[\"`echo "foo,bar" | sed s/,/\\\",\\\"/g`\"]"
 
 echo "Descr: $descr"
 echo "Maint: $maint"
@@ -26,3 +29,4 @@ echo " Name: $name"
 echo "Email: $email"
 echo "Packg: $pkg"
 echo "Versn: $ver"
+echo " Deps: $JSONDeps"
