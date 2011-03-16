@@ -13,17 +13,17 @@ mkdir syn
 dpkg-deb -x *.deb syn/
 metainf=`dpkg-deb -I *.deb`
 
-descr=`echo "$metainf" | grep Description | sed s/\ Description:\ //g`
-maint=`echo "$metainf" | grep Maintainer: | sed s/\ Maintainer:\ //g`
-name=`echo $maint | sed s/\<.*\>//g`
-email=`echo $maint | sed s/.*\<//g | tr -d ">"`
-pkg=`echo "$metainf" | grep Package: | sed s/\ Package:\ //g`
-ver=`echo "$metainf" | grep Version: | sed s/\ Version:\ //g`
-deps=`echo "$metainf" | grep ^\ Depends:\ | sed s/\ Depends:\ //g | sed -r 's/\(.[^)]*\)//g' | sed s/[\ ]*//g`
+descr=`echo "$metainf"    | grep Description      | sed s/\ Description:\ //g`
+maint=`echo "$metainf"    | grep Maintainer:      | sed s/\ Maintainer:\ //g`
+pkg=`echo "$metainf"      | grep Package:         | sed s/\ Package:\ //g`
+ver=`echo "$metainf"      | grep Version:         | sed s/\ Version:\ //g`
+deps=`echo "$metainf"     | grep ^\ Depends:\     | sed s/\ Depends:\ //g     | sed -r 's/\(.[^)]*\)//g' | sed s/[\ ]*//g`
 predeps=`echo "$metainf"  | grep ^\ Pre-Depends:\ | sed s/\ Pre-Depends:\ //g | sed -r 's/\(.[^)]*\)//g' | sed s/[\ ]*//g`
+email=`echo $maint        | sed s/.*\<//g         | tr -d ">"`
+name=`echo $maint         | sed s/\<.*\>//g`
 
 if [ "x$predeps" != "x" ]; then
-	echo " Deps: Both pre and post root"
+	# echo " Deps: Both pre and post root"
 	deps="$deps,$predeps"
 fi
 
