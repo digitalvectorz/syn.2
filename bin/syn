@@ -11,6 +11,7 @@ import Syn.s   as syn
 import Syn.errors
 import Syn.install
 import Syn.link
+import sys
 import os
 
 attrs = [
@@ -78,6 +79,7 @@ if options.link:
 		try:
 			if ver != None:
 				Syn.link.linkPkg(pkg, ver)
+				# THIS IS AN UNSTABLE POINT TO PROCESS!!!!!!!!
 			else:
 				l.l(l.CRITICAL,"*****")
 				l.l(l.CRITICAL,"Not a full versioned package")
@@ -88,6 +90,16 @@ if options.link:
 		l.l(l.CRITICAL,"*****")
 		l.l(l.CRITICAL,"You need to be root!")
 		l.l(l.CRITICAL,"*****")
+
+# This here MAY or MAY NOT be 
+# in a chroot. We need to be *VERY* careful
+# with processing after this point.
+
+if Syn.reg.CHROOT_TOUCHED:
+	l.l(l.CRITICAL,"Because we did a chroot link,")
+	l.l(l.CRITICAL," we need to abort here.")
+	l.l(l.CRITICAL," chroots are one way.")
+	sys.exit(0)
 
 if options.unlink:
 	if Syn.common.isRoot():
@@ -95,6 +107,7 @@ if options.unlink:
 		try:
 			if ver != None:
 				Syn.link.unlinkPkg(pkg, ver)
+				# THIS IS AN UNSTABLE POINT TO PROCESS!!!!!!!!
 			else:
 				l.l(l.CRITICAL,"*****")
 				l.l(l.CRITICAL,"Not a full versioned package")
@@ -106,3 +119,12 @@ if options.unlink:
 		l.l(l.CRITICAL,"You need to be root!")
 		l.l(l.CRITICAL,"*****")
 
+# This here MAY or MAY NOT be 
+# in a chroot. We need to be *VERY* careful
+# with processing after this point.
+
+if Syn.reg.CHROOT_TOUCHED:
+	l.l(l.CRITICAL,"Because we did a chroot unlink,")
+	l.l(l.CRITICAL," we need to abort here.")
+	l.l(l.CRITICAL," chroots are one way.")
+	sys.exit(0)

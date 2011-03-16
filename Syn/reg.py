@@ -3,4 +3,5 @@
 # GNU GPL-3+, 2011
 #
 
-CHROOT = "/"
+CHROOT         = "/"
+CHROOT_TOUCHED = False

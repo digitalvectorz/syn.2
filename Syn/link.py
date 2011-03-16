@@ -18,14 +18,14 @@ def linkPkg(pkg, ver):
 
 	db = Syn.db.loadCanonicalDB()
 
-	Syn.log.l(Syn.log.PEDANTIC,"Dumping into chroot for real (%s)" % Syn.reg.CHROOT)
-	os.chroot(Syn.reg.CHROOT)
-
-	Syn.log.l(Syn.log.PEDANTIC,"Swaping chroot out to /")
-	Syn.reg.CHROOT = "/"
-
-	db = Syn.db.loadCanonicalDB()
-	Syn.log.l(Syn.log.PEDANTIC,"Re-loading DB")
+	if Syn.reg.CHROOT != root:
+		Syn.log.l(Syn.log.PEDANTIC,"Dumping into chroot for real (%s)" % Syn.reg.CHROOT)
+		os.chroot(Syn.reg.CHROOT)
+		Syn.log.l(Syn.log.PEDANTIC,"Swaping chroot out to /")
+		Syn.reg.CHROOT = "/"
+		Syn.reg.CHROOT_TOUCHED = True
+		Syn.log.l(Syn.log.PEDANTIC,"Re-loading DB")
+		db = Syn.db.loadCanonicalDB()
 
 	Syn.log.l(Syn.log.MESSAGE, "Linking " + pkg + ", version " + ver)
 	db = Syn.db.loadCanonicalDB()
@@ -73,14 +73,14 @@ def unlinkPkg(pkg, ver):
 
 	db = Syn.db.loadCanonicalDB()
 
-	Syn.log.l(Syn.log.PEDANTIC,"Dumping into chroot for real (%s)" % Syn.reg.CHROOT)
-	os.chroot(Syn.reg.CHROOT)
-
-	Syn.log.l(Syn.log.PEDANTIC,"Swaping chroot out to /")
-	Syn.reg.CHROOT = "/"
-
-	db = Syn.db.loadCanonicalDB()
-	Syn.log.l(Syn.log.PEDANTIC,"Re-loading DB")
+	if Syn.reg.CHROOT != root:
+		Syn.log.l(Syn.log.PEDANTIC,"Dumping into chroot for real (%s)" % Syn.reg.CHROOT)
+		os.chroot(Syn.reg.CHROOT)
+		Syn.log.l(Syn.log.PEDANTIC,"Swaping chroot out to /")
+		Syn.reg.CHROOT = "/"
+		Syn.reg.CHROOT_TOUCHED = True
+		Syn.log.l(Syn.log.PEDANTIC,"Re-loading DB")
+		db = Syn.db.loadCanonicalDB()
 
 	Syn.log.l(Syn.log.MESSAGE, "Uninking " + pkg + ", version " + ver)
 	status = db.queryState(pkg,ver)
