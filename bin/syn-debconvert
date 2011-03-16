@@ -58,3 +58,7 @@ syn-dev --metaf "description=$descr"
 syn-dev --metaf "maintainer.email=Fixme, dots fail"
 
 syn-dev --bbuild .
+cd ../ # crud
+mv *.syn* ..
+cd ..
+rm -rf rollup
