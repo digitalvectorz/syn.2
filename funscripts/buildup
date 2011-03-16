@@ -1,16 +1,20 @@
 #!/bin/bash
+TEMPLATE_SYN_DIR="/usr/share/syn/synd"
 
-if [ -e *deb ]; then
-	rm *deb
+#if [ -e *deb ]; then
+#	rm *deb
+#fi
+
+if [ -d rollup ]; then
+	rm -rf rollup
 fi
 
-if [ -d syn ]; then
-	rm -rf syn
-fi
+#apt-get download $1
+mkdir rollup
+mkdir rollup/syn
+mkdir rollup/logs
 
-apt-get download $1
-mkdir syn
-dpkg-deb -x *.deb syn/
+dpkg-deb -x *.deb rollup/syn/
 metainf=`dpkg-deb -I *.deb`
 
 descr=`echo "$metainf"    | grep Description      | sed s/\ Description:\ //g`
@@ -29,10 +33,27 @@ fi
 
 JSONDeps="[\"`echo "$deps" | sed s/,/\\\",\\\"/g`\"]"
 
-echo "Descr: $descr"
-echo "Maint: $maint"
-echo " Name: $name"
-echo "Email: $email"
-echo "Packg: $pkg"
-echo "Versn: $ver"
-echo " Deps: $JSONDeps"
+echo "Debian Import Log:"   > rollup/logs/import.log
+echo ""                 >> rollup/logs/import.log
+echo "Parsed Vals"      >> rollup/logs/import.log
+echo ""                 >> rollup/logs/import.log
+echo "Descr: $descr"    >> rollup/logs/import.log
+echo "Maint: $maint"    >> rollup/logs/import.log
+echo " Name: $name"     >> rollup/logs/import.log
+echo "Email: $email"    >> rollup/logs/import.log
+echo "Packg: $pkg"      >> rollup/logs/import.log
+echo "Versn: $ver"      >> rollup/logs/import.log
+echo " Deps: $JSONDeps" >> rollup/logs/import.log
+echo ""                 >> rollup/logs/import.log
+
+cd rollup
+cat $TEMPLATE_SYN_DIR/meta | sed s/{PKG}/$pid/g | \
+	sed s/{PKGNAME}/$pkg/g | \
+	sed s/{PKGVER}/$ver/g > syn/meta
+
+syn-dev --metaf "maintainer.name=$name"
+syn-dev --metaf "description=$descr"
+
+
+syn-dev --metaf "maintainer.email=Fixme, dots fail"
+
