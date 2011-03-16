@@ -55,7 +55,8 @@ cat $TEMPLATE_SYN_DIR/meta | sed s/{PKG}/$pid/g | \
 cd crud
 syn-dev --metaf "maintainer.name=$name"
 syn-dev --metaf "description=$descr"
-syn-dev --metaf "maintainer.email=Fixme, dots fail"
+syn-dev --metaf "maintainer.email=$email"
+syn-dev --metaf "deps=$JSONDeps"
 
 syn-dev --bbuild .
 cd ../ # crud

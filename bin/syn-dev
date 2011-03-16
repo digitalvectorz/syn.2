@@ -38,16 +38,29 @@ if options.verbose:
 
 def setAttr(meta, string):
 	try:
-		klass       = string.index(".")
-		fart        = string[:string.index(".")]
-		masterklass = string[string.index(".")+1:]
+		dot = string.index(".")
+		eq = string.index("=")
+
+		if dot > eq:
+			raise ValueError("Dummy!")
+
+		fart        = string[:dot]
+		masterklass = string[dot+1:]
+
 		ms = setAttr(meta[fart], masterklass)
 		return meta
 	except ValueError as e:
 		try:
-			klass = string.index("=")
-			val   = string[string.index("=")+1:]
-			key   = string[:string.index("=")]
+			eq = string.index("=")
+			val   = string[eq+1:]
+
+			try:
+				val = json.loads(val)
+				print "Using the decoded JSON string, and not the string literal"
+			except Exception as e:
+				pass
+
+			key   = string[:eq]
 			meta[key] = val
 			return meta
 		except ValueError as e:
