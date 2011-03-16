@@ -64,12 +64,25 @@ def linkPkg(pkg, ver):
 			filespec = f[len(g.ARCHIVE_FS_ROOT):]
 			c.ln(pkg_root + f, root + filespec)
 
-		db.setState(pkg,ver,Syn.db.INSTALLED)
+		db.setLinked(pkg,ver)
 		db.sync()
 
-def unlinkPkg(pkg, ver, root="/"):
-	Syn.log.l(Syn.log.MESSAGE, "Uninking " + pkg + ", version " + ver)
+def unlinkPkg(pkg, ver):
+
+	root="/"
+
 	db = Syn.db.loadCanonicalDB()
+
+	Syn.log.l(Syn.log.PEDANTIC,"Dumping into chroot for real (%s)" % Syn.reg.CHROOT)
+	os.chroot(Syn.reg.CHROOT)
+
+	Syn.log.l(Syn.log.PEDANTIC,"Swaping chroot out to /")
+	Syn.reg.CHROOT = "/"
+
+	db = Syn.db.loadCanonicalDB()
+	Syn.log.l(Syn.log.PEDANTIC,"Re-loading DB")
+
+	Syn.log.l(Syn.log.MESSAGE, "Uninking " + pkg + ", version " + ver)
 	status = db.queryState(pkg,ver)
 
 	if status['status'] != Syn.db.LINKED:
