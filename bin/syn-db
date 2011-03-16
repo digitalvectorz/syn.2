@@ -10,10 +10,12 @@ import Syn.log as l
 import Syn.common
 import Syn.errors
 import Syn.db
+import os
 
 parser = OptionParser()
 
 parser.add_option( "-q", "--query",   dest = "query",   help = "Query the package database" )
+parser.add_option( "-c", "--chroot",  dest = "chroot",  help = "Use the following chroot to do dirty work" )
 parser.add_option( "-l", "--list",    dest = "dbdump",  help = "Dump the database", action="store_true" )
 parser.add_option( "--nuke-please-dont-use-me-at-all-damnit-this-is-bad",
 	dest = "nuke",    help = "Nuke the DB",       action="store_true" )
@@ -22,6 +24,9 @@ parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whi
 
 
 (options, args) = parser.parse_args()
+
+if options.chroot:
+	Syn.reg.CHROOT = os.path.abspath(options.chroot)
 
 if options.verbose:
 	Syn.log.VERBOSITY = Syn.log.PEDANTIC

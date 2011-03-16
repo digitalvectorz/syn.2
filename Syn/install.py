@@ -39,7 +39,7 @@ def installArchive(ar):
 	# XXX: Someone fix below this, please.
 	#      use Syn.fspkg.fspkg()
 
-	c.cd(g.INSTALL_ROOT_PATH)
+	c.cd(Syn.reg.CHROOT + g.INSTALL_ROOT_PATH)
 	if not c.xists(pkg):
 		c.mkdir(pkg)
 	c.cd(pkg)

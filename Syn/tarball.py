@@ -13,6 +13,7 @@ import Syn.log
 import tarfile
 import os.path
 import json
+import os
 
 BINARY  = 1
 SOURCE  = 2

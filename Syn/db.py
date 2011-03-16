@@ -5,6 +5,7 @@
 
 import Syn.Global as g
 import Syn.log
+import Syn.reg
 
 import pickle
 
@@ -86,7 +87,7 @@ class SynDB:
 
 	def writeout(self):
 		Syn.log.l(Syn.log.PEDANTIC, "Writing DB!")
-		database = open(g.SYNDB, 'wb')
+		database = open(Syn.reg.CHROOT + g.SYNDB, 'wb')
 		Syn.log.l(Syn.log.PEDANTIC, "File open")
 		pickle.dump(self._database, database)
 		Syn.log.l(Syn.log.PEDANTIC, "Dumped pickle data")
@@ -96,33 +97,34 @@ class SynDB:
 
 def loadCanonicalDB():
 	Syn.log.l(Syn.log.PEDANTIC, "Loading DB")
-	database = pickle.load(open(g.SYNDB, 'rb'))
+	Syn.log.l(Syn.log.PEDANTIC, "DB: " + Syn.reg.CHROOT + g.SYNDB)
+	database = pickle.load(open(Syn.reg.CHROOT + g.SYNDB, 'rb'))
 	Syn.log.l(Syn.log.PEDANTIC, "Extracted DB")
 	ret = SynDB()
 	ret._database = database
 	return ret
-	
 
 def strapDB():
 	Syn.log.l(Syn.log.PEDANTIC, "Bootstrapping Database")
 	Syn.log.l(Syn.log.PEDANTIC, "ALL PACKAGE STATS WILL BE WIPED")
 	ron = {}
-	pickle.dump(ron,  open(g.SYNDB, 'wb'))
-	pickle.dump(True, open(g.LOCKF, 'wb'))
+	pickle.dump(ron,  open(Syn.reg.CHROOT + g.SYNDB, 'wb'))
+	pickle.dump(True, open(Syn.reg.CHROOT + g.LOCKF, 'wb'))
 	Syn.log.l(Syn.log.PEDANTIC, "Database nuked")
 
 def aquireLock():
 	Syn.log.l(Syn.log.PEDANTIC, "Snagging lock")
-	lock = pickle.load(open(g.LOCKF, 'rb'))
+	lock = pickle.load(open(Syn.reg.CHROOT + g.LOCKF, 'rb'))
 	if lock == True:
-		pickle.dump(False, open(g.LOCKF, 'wb'))
+		pickle.dump(False, open(Syn.reg.CHROOT + g.LOCKF, 'wb'))
 		Syn.log.l(Syn.log.PEDANTIC, "Got the lock!")
 	else:
 		raise Syn.errors.MutexException("Can not aquire lock")
 
 def releaseLock():
 	Syn.log.l(Syn.log.PEDANTIC, "Getting rid of the lock")
-	lock = pickle.load(open(g.LOCKF, 'rb'))
+	lock = pickle.load(open(Syn.reg.CHROOT + g.LOCKF, 'rb'))
 	if lock == False:
-		pickle.dump(True, open(g.LOCKF, 'wb'))
+		pickle.dump(True, open(Syn.reg.CHROOT + g.LOCKF, 'wb'))
 		Syn.log.l(Syn.log.PEDANTIC, "All set.")
+

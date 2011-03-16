@@ -11,7 +11,22 @@ import Syn.fspkg
 import Syn.errors
 import Syn.db
 
-def linkPkg(pkg, ver, root="/"):
+import os
+
+def linkPkg(pkg, ver):
+	root = "/"
+
+	db = Syn.db.loadCanonicalDB()
+
+	Syn.log.l(Syn.log.PEDANTIC,"Dumping into chroot for real (%s)" % Syn.reg.CHROOT)
+	os.chroot(Syn.reg.CHROOT)
+
+	Syn.log.l(Syn.log.PEDANTIC,"Swaping chroot out to /")
+	Syn.reg.CHROOT = "/"
+
+	db = Syn.db.loadCanonicalDB()
+	Syn.log.l(Syn.log.PEDANTIC,"Re-loading DB")
+
 	Syn.log.l(Syn.log.MESSAGE, "Linking " + pkg + ", version " + ver)
 	db = Syn.db.loadCanonicalDB()
 	status = db.queryState(pkg,ver)
@@ -49,7 +64,7 @@ def linkPkg(pkg, ver, root="/"):
 			filespec = f[len(g.ARCHIVE_FS_ROOT):]
 			c.ln(pkg_root + f, root + filespec)
 
-		db.setLinked(pkg,ver)
+		db.setState(pkg,ver,Syn.db.INSTALLED)
 		db.sync()
 
 def unlinkPkg(pkg, ver, root="/"):
