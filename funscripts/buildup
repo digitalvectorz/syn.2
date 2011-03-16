@@ -11,7 +11,8 @@ fi
 
 #apt-get download $1
 mkdir rollup
-mkdir rollup/syn
+mkdir rollup/crud
+mkdir rollup/crud/synd
 mkdir rollup/logs
 
 dpkg-deb -x *.deb rollup/syn/
@@ -49,11 +50,11 @@ echo ""                 >> rollup/logs/import.log
 cd rollup
 cat $TEMPLATE_SYN_DIR/meta | sed s/{PKG}/$pid/g | \
 	sed s/{PKGNAME}/$pkg/g | \
-	sed s/{PKGVER}/$ver/g > syn/meta
+	sed s/{PKGVER}/$ver/g > crud/synd/meta
 
+cd crud
 syn-dev --metaf "maintainer.name=$name"
 syn-dev --metaf "description=$descr"
-
-
 syn-dev --metaf "maintainer.email=Fixme, dots fail"
 
+syn-dev --bbuild .
