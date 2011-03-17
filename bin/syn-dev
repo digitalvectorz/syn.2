@@ -56,7 +56,7 @@ def setAttr(meta, string):
 
 			try:
 				val = json.loads(val)
-				print "Using the decoded JSON string, and not the string literal"
+				#print "Using the decoded JSON string, and not the string literal"
 			except Exception as e:
 				pass
 

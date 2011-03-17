@@ -40,8 +40,10 @@ def buildSourcePackage(package):
 		ret = 0
 	except Syn.errors.BuildFailureException as e:
 		l.l(l.CRITICAL,"Failure to build!")
+		l.l(l.CRITICAL,"Check the package build root in /tmp/syn, plox")
 		l.l(l.CRITICAL,str(e))
 		ret = -2
+		return ret # fuck removing the dir
 
 	c.rmdir(build_root)
 	return ret
