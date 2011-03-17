@@ -20,6 +20,7 @@ def readConfFile(f):
 
 def setupBuildEnv(ar):
 	build_config = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_CONFIG)
+	meta_config  = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META)
 
 	config_flag_string = ""
 	build_flag_string  = ""
@@ -41,6 +42,9 @@ def setupBuildEnv(ar):
 	Syn.s.putenv(g.CONFIG, build_config['configure'])
 	Syn.s.putenv(g.BUILD,  build_config['build'])
 	Syn.s.putenv(g.STAGE,  build_config['stage'])
+
+	Syn.s.putenv(g.ENV_PKGID,    meta_config['package'])
+	Syn.s.putenv(g.ENV_VERID,    meta_config['version'])
 
 def run(cmd):
 	return commands.getstatusoutput(cmd)
