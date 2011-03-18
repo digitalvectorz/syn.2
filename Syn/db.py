@@ -44,6 +44,10 @@ class SynDB:
 		except KeyError as e:
 			raise Syn.errors.PackageNotFoundException("No package found")
 
+	def getLatestVersion(self, package):
+		state = self.queryGState(package)
+		return state['installed'][0]
+
 	def registerNewPackage(self, package, version, status):
 		try:
 			pkg = self._database[package]

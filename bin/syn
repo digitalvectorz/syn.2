@@ -11,6 +11,7 @@ import Syn.s   as syn
 import Syn.errors
 import Syn.install
 import Syn.link
+import Syn.dep
 import sys
 import os
 
@@ -30,6 +31,8 @@ parser.add_option( "-n", "--info",    dest = "info",    help = "Read binary pack
 parser.add_option( "-l", "--link",    dest = "link",    help = "Link a package into the filesystem" )
 parser.add_option( "-u", "--unlink",  dest = "unlink",  help = "Unlink a package into the filesystem" )
 parser.add_option( "-c", "--chroot",  dest = "chroot",  help = "Use the following chroot to do dirty work" )
+parser.add_option( "-x", "--test",    dest = "test",    help = "test function" )
+
 parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
 	action = "store_true", default = False)
 
@@ -40,6 +43,9 @@ if options.verbose:
 
 if options.chroot:
 	Syn.reg.CHROOT = os.path.abspath(options.chroot)
+
+if options.test:
+	Syn.dep.getDeps(options.test)
 
 if options.info:
 	try:
