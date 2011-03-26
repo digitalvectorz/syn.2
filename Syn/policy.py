@@ -3,6 +3,8 @@
 # GNU GPL-3+, 2011
 #
 
+POLICY_VERSION = 2
+
 META_REQUIRED = [
 	"package",
 	"version",
@@ -11,12 +13,13 @@ META_REQUIRED = [
 	"description",
 	"download",
 	"local",
+	"policy",
 	"maintainer"
 ]
 
 META_NEEDED = [
-	"vcs",
-	"license"
+	"license",
+	"vcs"
 ]
 
 META_GOODTOHAVE = [
@@ -107,13 +110,32 @@ This field is the *full* URL of an authoritative host, hosting the package.
 """,
 	"local"               :
 """
-This field is the local  version of the package.
+This field is the local version of the package.
  This is the local syn version of the package. Since most packages are external
  to the syn development cycle, it makes sense to keep track of changes to the
  synd folder in this version ID. When you make a change to the synd (e.g. 
  maintainer, build steps, policy updates), this should be incremented to 
  ensure that the new package overrides the old one (without klobbering
  upstream's version IDs). Please reset this to '1' after every new release.
+""",
+	"policy"              :
+"""
+This field is the version of the standards in place. 
+ Syn changes policy as often as needs to be done to maintain a sane build system
+ for package maintainers. Fields are added, removed, and scripts get changed. As
+ a result, we need to version the policy version ID of the system. You need this
+ field to ensure that you are:
+  * Following the up-to-date standards
+  * Getting error messages on new fields or features
+  * Ready for migration to new tools without backwards compatibility
+  * Active ;)
+""",
+	"policy-outofdate"    :
+"""
+The policy version in this package is out of date.
+ Please check to see what the changes are since the last policy version, and
+ update your package accordingly. This is critical! Keep up to date and get
+ virtual hugs!
 """,
 	"maintainer"          :
 """
