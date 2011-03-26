@@ -8,6 +8,9 @@ configure::
 
 build::
 	$(BUILD) $(BUILD_FLAGS)
+ifdef BUILD_CHECK
+		$(BUILD_CHECK) $(BUILD_CHECK_FLAGS)
+endif
 
 stage::
 	$(STAGE) $(STAGE_FLAGS) DESTDIR=$(S_DESTDIR)
