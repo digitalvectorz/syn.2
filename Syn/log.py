@@ -21,7 +21,7 @@ HR_LOGLEVELS = {
 	PEDANTIC : "Pedantic "
 }
 
-DEFAULT   = HIGH
+DEFAULT   = LOG
 VERBOSITY = DEFAULT
 
 def l(level, msg):
