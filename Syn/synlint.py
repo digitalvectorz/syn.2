@@ -24,7 +24,7 @@ def checkFields(attrs, meta):
 		try:
 			good = meta[a]
 		except KeyError as e:
-			outputError("Missing Field!", Syn.policy.DESCRS[a])
+			outputError("Missing Field! (" + a + ")", Syn.policy.DESCRS[a])
 			errs += 1
 	return errs
 
