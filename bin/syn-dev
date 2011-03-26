@@ -22,6 +22,7 @@ parser.add_option( "-l", "--lint",    dest = "lint",    help = "Check the packag
 parser.add_option( "-v", "--verify",  dest = "verify",  help = "Verify a package" )
 parser.add_option( "-s", "--summary", dest = "summary", help = "Gen package kickass file" )
 parser.add_option( "-m", "--metaf",   dest = "metaf",   help = "Edit the metafile" )
+parser.add_option( "-f", "--metafro", dest = "metafro", help = "Read the metafile" )
 parser.add_option( "-d", "--bbuild",  dest = "bbuild",  help = "Binary file build" )
 
 parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a source package",
@@ -67,6 +68,20 @@ def setAttr(meta, string):
 			print "Invalid attr string! Shit!"
 			return None
 
+def getAttr(meta, string):
+	try:
+		dot      = string.index(".")
+		if dot != None:
+			nextID   = string[:dot]
+			nextPrcs = string[dot+1:]
+			subtree = meta[nextID]
+			return getAttr(subtree, nextPrcs)
+		else:
+			raise ValueError("Dummy")
+	except ValueError as e:
+		return meta[string]
+
+
 if options.metaf:
 	f = open(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META,'r')
 	meta = json.loads(f.read())
@@ -75,6 +90,13 @@ if options.metaf:
 	meta = json.dumps(mobj, sort_keys = True, indent = 4)
 	f = open(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META,'w')
 	f.write(meta)
+
+if options.metafro:
+	f = open(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META,'r')
+	meta = json.loads(f.read())
+	f.close()
+	frob = getAttr(meta, options.metafro)
+	print frob
 
 if options.bbuild:
 	f = open(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META,'r')
