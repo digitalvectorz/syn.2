@@ -10,6 +10,7 @@ META_REQUIRED = [
 	"deps",
 	"description",
 	"download",
+	"local",
 	"maintainer"
 ]
 
@@ -103,6 +104,16 @@ This field is the *full* URL of an authoritative host, hosting the package.
    http://nullop.pault.ag/download/nullop-1.0.tar.gz
 
  This field is used internally to resolve the source tarball name.
+""",
+	"local"               :
+"""
+This field is the local  version of the package.
+ This is the local syn version of the package. Since most packages are external
+ to the syn development cycle, it makes sense to keep track of changes to the
+ synd folder in this version ID. When you make a change to the synd (e.g. 
+ maintainer, build steps, policy updates), this should be incremented to 
+ ensure that the new package overrides the old one (without klobbering
+ upstream's version IDs). Please reset this to '1' after every new release.
 """,
 	"maintainer"          :
 """
