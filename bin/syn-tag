@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+pkg=`syn-dev -f package`
+ver=`syn-dev -f version`
+loc=`syn-dev -f local`
+
+email=`syn-dev -f maintainer.email`
+name=`syn-dev -f  maintainer.name`
+
+fullname="$name <$email>"
+echo "Upload prepared by: $fullname"
+
+tarball=$(basename $(syn-dev -f download))
+
+fullid="$pkg-$ver"
+
+tag="$ver/$loc"
+
+echo "Tagging as: $tag"
+
+syn-dev -or
+syn-dev -ob ../$fullid.syn.tar.gz
+
+echo "Syn $tag release." > .syn-message
+echo "" >> .syn-message
+echo "Package prepared by:" >> .syn-message
+echo " $fullname" >> .syn-message
+
+echo "git tag -a $tag -F .syn-message"
+echo "pristine-tar commit $tarball $tag"
+
+rm .syn-message
