@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -e
+
+gitroot="git@m.pault.ag:/git/syn"
+
+if [ "x$1" == "x" ]; then
+	echo "need a package name. thx. no version"
+	exit 1
+fi
+
+if [ -d $1 ]; then
+	echo "removing $1. hit enter to continue"
+	read foo
+	rm -rf $1
+fi
+
+mkdir $1
+cd $1
+
+git clone $gitroot/$1.git
+cd $1
+
+pkg=`syn-dev -f package`
+ver=`syn-dev -f version`
+
+fullid="$pkg-$ver"
+tarball=$(basename $(syn-dev -f download))
+
+echo "Checking out the tarball. Resolved as: "
+echo " $tarball"
+
+pristine-tar checkout $tarball
+
+cd ..
+mv $1 $fullid
+
+echo "All set."
