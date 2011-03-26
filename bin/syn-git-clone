@@ -34,5 +34,3 @@ pristine-tar checkout $tarball
 
 cd ..
 mv $1 $fullid
-
-echo "All set."

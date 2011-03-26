@@ -36,3 +36,7 @@ git tag -a $tag -F .syn-message
 pristine-tar commit $tarball $tag
 
 rm .syn-message
+
+git push
+git push --tags
+git push --all
