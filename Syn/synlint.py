@@ -34,9 +34,7 @@ def checkVersion(metafile):
 			outputError("Policy is out of date!", Syn.policy.DESCRS["policy-outofdate"])
 		return 1
 	except KeyError as e:
-		outputError("policy version missing", """
-Can not parse the version ID, since it's not here.
-""")
+		outputError("policy version missing", Syn.policy.DESCRS["policy-missing-version"])
 		return 1
 
 def sourceCheck( ar ):

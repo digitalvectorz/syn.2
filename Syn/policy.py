@@ -137,6 +137,13 @@ The policy version in this package is out of date.
  update your package accordingly. This is critical! Keep up to date and get
  virtual hugs!
 """,
+	"policy-missing-version"    :
+"""
+The policy version tag is missing a value.
+ This sucks ass. We can't even check to see what version of the policy that this
+ package is to adhere to. Please add the tag. Most of the time, this is also
+ showing up below a policy missing error. Fix this, plox.
+""",
 	"maintainer"          :
 """
 This field is used to maintain a record of who is currently in charge of it.
