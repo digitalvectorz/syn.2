@@ -32,7 +32,13 @@ def checkVersion(metafile):
 	try:
 		if metafile["policy"] < Syn.policy.POLICY_VERSION:
 			outputError("Policy is out of date!", Syn.policy.DESCRS["policy-outofdate"])
-		return 1
+			return 1
+		elif metafile["policy"] == Syn.policy.POLICY_VERSION:
+			return 0
+		else:
+			outputError("Policy is in the FUTURE!!", Syn.policy.DESCRS["policy-outofdate"])
+			return 1
+
 	except KeyError as e:
 		outputError("policy version missing", Syn.policy.DESCRS["policy-missing-version"])
 		return 1
