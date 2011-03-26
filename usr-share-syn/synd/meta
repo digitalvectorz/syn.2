@@ -24,6 +24,9 @@
         }
     },
 
+    "local"  : 1,
+    "policy" : 1,
+
     "build-deps" : [
     ],
 
