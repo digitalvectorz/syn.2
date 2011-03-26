@@ -11,6 +11,11 @@ import Syn.s
 import Syn.policy
 import os
 
+def outputError(title, message):
+	l.p( "================================================================================")
+	l.p( "          Error: " + title)
+	l.p( "================================================================================")
+	l.p( message)
 
 
 def checkFields(attrs, meta):
@@ -19,18 +24,31 @@ def checkFields(attrs, meta):
 		try:
 			good = meta[a]
 		except KeyError as e:
-			l.p( "================================================================================")
-			l.p( "          Missing Field: " + a)
-			l.p( "================================================================================")
-			l.p( Syn.policy.DESCRS[a])
+			outputError("Missing Field! (" + a + ")", Syn.policy.DESCRS[a])
 			errs += 1
 	return errs
 
+def checkVersion(metafile):
+	try:
+		if metafile["policy"] < Syn.policy.POLICY_VERSION:
+			outputError("Policy is out of date!", Syn.policy.DESCRS["policy-outofdate"])
+			return 1
+		elif metafile["policy"] == Syn.policy.POLICY_VERSION:
+			return 0
+		else:
+			outputError("Policy is in the FUTURE!!", Syn.policy.DESCRS["policy-outofdate"])
+			return 1
+
+	except KeyError as e:
+		outputError("policy version missing", Syn.policy.DESCRS["policy-missing-version"])
+		return 1
+
 def sourceCheck( ar ):
 	metafile = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META)
-	r_errs = checkFields(Syn.policy.META_REQUIRED,   metafile)
-	n_errs = checkFields(Syn.policy.META_NEEDED,     metafile)
-	g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile)
+	r_errs =  checkFields(Syn.policy.META_REQUIRED,   metafile)
+	n_errs =  checkFields(Syn.policy.META_NEEDED,     metafile)
+	g_errs =  checkFields(Syn.policy.META_GOODTOHAVE, metafile)
+	n_errs += checkVersion(metafile)
 	return ( r_errs, n_errs, g_errs )
 
 def binaryCheck( ar ):
@@ -38,6 +56,7 @@ def binaryCheck( ar ):
 	r_errs = checkFields(Syn.policy.META_REQUIRED,   metafile)
 	n_errs = checkFields(Syn.policy.META_NEEDED,     metafile)
 	g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile)
+	n_errs += checkVersion(metafile)
 	return ( r_errs, n_errs, g_errs )
 
 

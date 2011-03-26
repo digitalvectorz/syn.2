@@ -84,7 +84,7 @@ if options.bbuild:
 	( b_pth, l_pth ) = Syn.build.package(meta)
 
 if options.roll:
-	if l.VERBOSITY <= l.LOG:
+	if l.VERBOSITY < l.LOG:
 		print "It's unwise to run a build without `-o' or `--loud'!!"
 		print "You *will* miss out on synlint checks. Rest assured."
 
@@ -95,7 +95,7 @@ if options.roll:
 		l.l(l.CRITICAL,str(e))
 
 if options.lint:
-	if l.VERBOSITY <= l.LOG:
+	if l.VERBOSITY < l.LOG:
 		print "It's stupid to run lint without `-o' or `--loud'."
 		print "Unless you're a robot. Then you don't understand this."
 		print "Or you do, but you don't have hurt feelings. No emotions, bitch."
