@@ -13,6 +13,8 @@ import Syn.db
 
 import os
 
+FORCE=True
+
 def linkPkg(pkg, ver):
 	root = "/"
 
@@ -62,7 +64,7 @@ def linkPkg(pkg, ver):
 			pkg_root = fpkg.getInstallPath()
 			fs_root  = root
 			filespec = f[len(g.ARCHIVE_FS_ROOT):]
-			c.ln(pkg_root + f, root + filespec)
+			c.fs_ln_inst(pkg_root + f, root + filespec)
 
 		db.setLinked(pkg,ver)
 		db.sync()
@@ -85,15 +87,17 @@ def unlinkPkg(pkg, ver):
 	Syn.log.l(Syn.log.MESSAGE, "Uninking " + pkg + ", version " + ver)
 	status = db.queryState(pkg,ver)
 
-	if status['status'] != Syn.db.LINKED:
+	Syn.log.l(Syn.log.VERBOSE, "Status: %s" % status['status'])
+
+	if status['status'] != Syn.db.LINKED and status['status'] != Syn.db.HALF_LINKED:
 		Syn.log.l(Syn.log.CRITICAL, "Package is not linked. Damnit!")
 		raise Syn.errors.PackageNotinstalledException("Not linked: %s version %s" % (pkg, ver))
 	else:
 		status = db.queryGState(pkg)
 
-		if status['linked'] != ver:
-			Syn.log.l(Syn.log.LOG, "Different version linked!")
-			raise Syn.errors.ConflictException("Different version Linked")
+		#if status['linked'] != ver:
+		#	Syn.log.l(Syn.log.LOG, "Different version linked!")
+		#	raise Syn.errors.ConflictException("Different version Linked")
 
 		Syn.log.l(Syn.log.LOG, "Package is linked. We can unlink it!")
 		fpkg = Syn.fspkg.fspkg(pkg, ver)
@@ -103,6 +107,7 @@ def unlinkPkg(pkg, ver):
 		for f in fslist:
 			filespec = f[len(g.ARCHIVE_FS_ROOT):]
 			if c.xists(root + filespec) and not c.isln(root + filespec):
+				Syn.log.l(Syn.log.LOG, "Errorful: %s" % filespec)
 				errors += 1
 
 		if errors != 0:
@@ -114,7 +119,10 @@ def unlinkPkg(pkg, ver):
 
 		for f in fslist:
 			filespec = f[len(g.ARCHIVE_FS_ROOT):]
-			c.rm(root+filespec)
+			#try:
+			c.fs_unln_inst(root+filespec)
+			#except OSError as e:
+			#	Syn.log.l(Syn.log.LOG, "OS Error: %s" % str(e))
 
 		db.setUnlinked(pkg,ver)
 		db.sync()

@@ -72,6 +72,14 @@ def ln(source, dest):
 	Syn.log.l(Syn.log.PEDANTIC, "ln " + source + " to " + dest)
 	os.symlink(source, dest)
 
+def fs_ln_inst(source, dest):
+	#lay_claim
+	ln(source,dest)
+
+def fs_unln_inst(fi):
+	#unlay claim
+	rm(fi)
+
 def dict_diff(first, second):
 	diff = {}
 	# Check all keys in first dict

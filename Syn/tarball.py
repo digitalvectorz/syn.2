@@ -159,8 +159,11 @@ class archive:
 		members = self.tarball_target.getmembers()
 		directories = []
 		for member in members:
-			if member.isdir():
-				directories.append(member.name)
+			#if member():
+			directories.append(member.name)
+
+		# print directories
+
 		root_folder = os.path.commonprefix(directories)
 		return root_folder
 
