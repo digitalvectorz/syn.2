@@ -34,7 +34,11 @@
         "libc"
     ],
 
-    "upstream-vcs"        : "git://{PKGNAME}.com/{PKGNAME}.git",
+    "upstream-vcs"        : {
+        "type"   : "git",
+        "co-url" : "git://{PKGNAME}.com/{PKGNAME}.git",
+        "browse" : "http://git.{PKGNAME}.com/?a=summary&p={PKGNAME}"
+    },
     "upstream-bugtracker" : "http://bugs.{PKGNAME}.com/",
 
     "package" : "{PKGNAME}", 
