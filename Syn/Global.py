@@ -74,7 +74,7 @@ SYN_BIN_TO_XTRACT = {
 }
 
 INSTALL_BLACKLIST = [
-	"/usr/share/info/dirs"
+	"/usr/share/info/dir"
 ]
 
 CONFIG_FLAGS = "CONFIG_FLAGS"

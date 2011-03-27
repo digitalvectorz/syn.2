@@ -78,6 +78,13 @@ def package(metainf):
 		c.cp(x, "../" + g.SYN_SRC_TO_BIN_FILESPEC[x])
 
 	c.cd("..")
+
+	for x in g.INSTALL_BLACKLIST:
+		Syn.log.l(Syn.log.LOG,"checking blacklisted file: %s" % x)
+		if c.xists(g.ARCHIVE_FS_ROOT_NOSLASH + x):
+			Syn.log.l(Syn.log.LOG,"Removing: %s (blacklist)" % x)
+			c.rm(g.ARCHIVE_FS_ROOT_NOSLASH + x)
+
 	files = c.md5sumwd(g.ARCHIVE_FS_ROOT_NOSLASH)
 	output = json.dumps(files, sort_keys = True, indent = 4)
 	f = open(g.ARCHIVE_FS_ROOT + "/" + g.SYN_BINARY_FILESUMS, 'w')
