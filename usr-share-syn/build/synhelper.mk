@@ -4,12 +4,15 @@
 #
 
 configure::
+ifdef PATCH_SOURCE
+	sh_patch
+endif
 	$(CONFIGURE) $(CONFIG_FLAGS)
 
 build::
 	$(BUILD) $(BUILD_FLAGS)
 ifdef BUILD_CHECK
-		$(BUILD_CHECK) $(BUILD_CHECK_FLAGS)
+	$(BUILD_CHECK) $(BUILD_CHECK_FLAGS)
 endif
 
 stage::

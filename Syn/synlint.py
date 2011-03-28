@@ -18,14 +18,15 @@ def outputError(title, message):
 	l.p( message)
 
 
-def checkFields(attrs, meta):
+def checkFields(attrs, meta, policy):
 	errs = 0
 	for a in attrs:
 		try:
 			good = meta[a]
 		except KeyError as e:
-			outputError("Missing Field! (" + a + ")", Syn.policy.DESCRS[a])
-			errs += 1
+			if attrs[a] <= policy:
+				outputError("Missing Field! (" + a + ")", Syn.policy.DESCRS[a])
+				errs += 1
 	return errs
 
 def checkVersion(metafile):
@@ -45,17 +46,19 @@ def checkVersion(metafile):
 
 def sourceCheck( ar ):
 	metafile = ar.getConf(g.SYN_SRC_DIR + g.SYN_BUILDDIR_META)
-	r_errs =  checkFields(Syn.policy.META_REQUIRED,   metafile)
-	n_errs =  checkFields(Syn.policy.META_NEEDED,     metafile)
-	g_errs =  checkFields(Syn.policy.META_GOODTOHAVE, metafile)
+	policy = metafile["policy"]
+	r_errs =  checkFields(Syn.policy.META_REQUIRED,   metafile, policy)
+	n_errs =  checkFields(Syn.policy.META_NEEDED,     metafile, policy)
+	g_errs =  checkFields(Syn.policy.META_GOODTOHAVE, metafile, policy)
 	n_errs += checkVersion(metafile)
 	return ( r_errs, n_errs, g_errs )
 
 def binaryCheck( ar ):
 	metafile = ar.getConf(g.SYN_BINARY_META)
-	r_errs = checkFields(Syn.policy.META_REQUIRED,   metafile)
-	n_errs = checkFields(Syn.policy.META_NEEDED,     metafile)
-	g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile)
+	policy = metafile["policy"]
+	r_errs = checkFields(Syn.policy.META_REQUIRED,   metafile, policy)
+	n_errs = checkFields(Syn.policy.META_NEEDED,     metafile, policy)
+	g_errs = checkFields(Syn.policy.META_GOODTOHAVE, metafile, policy)
 	n_errs += checkVersion(metafile)
 	return ( r_errs, n_errs, g_errs )
 
