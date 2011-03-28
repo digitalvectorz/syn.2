@@ -4,6 +4,16 @@
         "name"   : "John Q. Hacker"
     }, 
 
+    "multipkg" : {
+        "*"              : "pkg-base",
+        "/usr/bin/*"     : "bins",
+        "/bin/*"         : "bins",
+        "/usr/lib/*"     : "libs",
+        "/lib/*"         : "libs",
+        "/usr/include/*" : "headers",
+        "/etc/*"         : "conf"
+    },
+
     "description" : "Please describe your package here..", 
     "download"    : "http://domain.tld/{PKG}",
 

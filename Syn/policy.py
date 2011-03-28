@@ -3,29 +3,30 @@
 # GNU GPL-3+, 2011
 #
 
-POLICY_VERSION = 2
+POLICY_VERSION = 3
 
-META_REQUIRED = [
-	"package",
-	"version",
-	"build-deps",
-	"deps",
-	"description",
-	"download",
-	"local",
-	"policy",
-	"maintainer"
-]
+META_REQUIRED = {
+	"package"     : 1,
+	"version"     : 1,
+	"build-deps"  : 1,
+	"deps"        : 1,
+	"description" : 1,
+	"download"    : 1,
+	"multipkg"    : 3,
+	"local"       : 2,
+	"policy"      : 2,
+	"maintainer"  : 1
+}
 
-META_NEEDED = [
-	"license",
-	"vcs"
-]
+META_NEEDED = {
+	"license"  : 1,
+	"vcs"      : 1
+}
 
-META_GOODTOHAVE = [
-	"upstream-vcs",
-	"upstream-bugtracker"
-]
+META_GOODTOHAVE = {
+	"upstream-vcs"        : 1,
+	"upstream-bugtracker" : 1
+}
 
 LICENSE_CLEAN = [
 	"GPL",
@@ -50,6 +51,8 @@ DESCRS = {
 	"package"             :
 """
 This field is the Package name.
+ Policy Version: 1
+
  Given the source tarball `fluxbox-1.0', the package name is simply `fluxbox'.
  This field is required as it is used internally to generate tarball names
  and the like. Bear in mind that if (in the case of Python) the tarball does
@@ -61,6 +64,7 @@ This field is the Package name.
 	"version"             :
 """
 This field is the Package version number.
+ Policy Version: 1
  Given the source tarball `fluxbox-1.0', the package version is just `1.0'.
  This field is required as it is used internally to generate tarball names
  and the like. Please keep this version number identical to the upstream
@@ -69,6 +73,8 @@ This field is the Package version number.
 	"build-deps"          :
 """
 This field tells syn which packages are needed to build the sourceball.
+ Policy Version: 1
+
  The base development package will be installed before a build, so please
  don't worry about packages such as `gcc' or `make'. These should be unique
  to your package, such as `ncurses' or `x11'.
@@ -77,9 +83,33 @@ This field tells syn which packages are needed to build the sourceball.
  deps. Remember, you might have packages only used in setting up the package
  (such as `sed' or `awk'). 
 """,
+	"multipkg"             :
+"""
+This field dictates what files go into what package classes.
+ Policy Version: 3
+
+ This field is the babymaking behind the outstanding feature that lets you
+ only install what you want to install (when you want to install it).
+
+ Here's an example.
+
+    "multipkg" : {
+        "*"              : "pkg-base",
+        "/usr/bin/*"     : "bins",
+        "/bin/*"         : "bins",
+        "/usr/lib/*"     : "libs",
+        "/lib/*"         : "libs",
+        "/usr/include/*" : "headers",
+        "/etc/*"         : "conf"
+    }
+
+ The above should be the default. Huzzah!
+""",
 	"deps"                :
 """
 This field tells syn which packages are needed to run the package on the host.
+ Policy Version: 1
+
  By defining a package in this field, you are declaring that it must be
  installed and linked before this package. These should be runtime dependencies
  only, what is needed to run the package.
@@ -87,6 +117,8 @@ This field tells syn which packages are needed to run the package on the host.
 	"description"         :
 """
 This field is a human-readable description of what the package does.
+ Policy Version: 1
+
  It's required to have a description for a package. This is because even the
  most hardcore UNIX nerd needs to look up exactly what a package does on
  occasion.
@@ -101,6 +133,8 @@ This field is a human-readable description of what the package does.
 	"download"            :
 """
 This field is the *full* URL of an authoritative host, hosting the package.
+ Policy Version: 1
+
  If, as example, you have downloaded the package `nullop-1.0' from pault.ag
  (the author of the package, so his domain is clearly trusted), one valid
  URL (if this URL is valid, of course) would be:
@@ -111,6 +145,8 @@ This field is the *full* URL of an authoritative host, hosting the package.
 	"local"               :
 """
 This field is the local version of the package.
+ Policy Version: 2
+
  This is the local syn version of the package. Since most packages are external
  to the syn development cycle, it makes sense to keep track of changes to the
  synd folder in this version ID. When you make a change to the synd (e.g. 
@@ -121,6 +157,8 @@ This field is the local version of the package.
 	"policy"              :
 """
 This field is the version of the standards in place. 
+ Policy Version: 2
+
  Syn changes policy as often as needs to be done to maintain a sane build system
  for package maintainers. Fields are added, removed, and scripts get changed. As
  a result, we need to version the policy version ID of the system. You need this
@@ -147,6 +185,8 @@ The policy version tag is missing a value.
 	"maintainer"          :
 """
 This field is used to maintain a record of who is currently in charge of it.
+ Policy Version: 1
+
  This field needs to be composed of a dict, with two members, when combined
  with angle brackets compose a valid RFC822 email address.
 
@@ -165,6 +205,8 @@ This field is used to maintain a record of who is currently in charge of it.
 	"vcs"                 :
 """
 This field is to maintain a record of where the maintainer's branch is kept.
+ Policy Version: 1
+
  This field needs to be composed of three fields in a simple dict. 
 
  The three fields are `type', `co-url' and `browse'. 
@@ -182,6 +224,8 @@ This field is to maintain a record of where the maintainer's branch is kept.
 	"license"             :
 """
 Arguably the most complex field in the metainf, this field tracks licensing.
+ Policy Version: 1
+
  Here's an example of a sane entry.
 
  "license" : {
@@ -209,11 +253,15 @@ Arguably the most complex field in the metainf, this field tracks licensing.
 	"upstream-vcs"        :
 """
 This field is the location of the upstream Version Control system.
+ Policy Version: 1
+
  This field should be in the same format as the `vcs' attribute. 
 """,
 	"upstream-bugtracker" :
 """
 This field is the homepage location of the upstream bugtracker.
+ Policy Version: 1
+
  If the package uses a big ole' bugtracker like Launchpad, please
  include the full path to it's homepage.
 """
