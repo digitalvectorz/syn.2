@@ -4,5 +4,16 @@
 # This concept was totally jacked from debhelper. I do
 # love Debian. 
 
-include /usr/share/syn/build/synhelper.mk
+STRIP_SOURCE=1
+# This here marks that we will
+# strip debugging symbols off the
+# sourcecode. Huzzah. Most packages need
+# this. Don't worry about strip-all,
+# this won't fsck up libs. 
 
+include /usr/share/syn/build/synhelper.mk
+# This provides our
+#  - configure
+#  - build
+#  - stage
+# targets.

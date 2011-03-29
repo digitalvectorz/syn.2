@@ -17,3 +17,6 @@ endif
 
 stage::
 	$(STAGE) $(STAGE_FLAGS) DESTDIR=$(S_DESTDIR)
+ifdef STRIP_SOURCE
+	cd $(S_DESTDIR) && sh_strip
+endif

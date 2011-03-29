@@ -1,0 +1,10 @@
+#!/bin/bash
+
+binaries=$(file `find . -type f` | grep ELF | awk '{print $1}' | sed s/:$//g)
+
+for x in $binaries; do
+	pre=`ls -lah $x | awk '{print $5}'`
+	strip --strip-debug $x
+	post=`ls -lah $x | awk '{print $5}'`
+	echo "$x - $pre / $post"
+done
