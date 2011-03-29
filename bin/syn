@@ -102,9 +102,9 @@ if options.link:
 # with processing after this point.
 
 if Syn.reg.CHROOT_TOUCHED:
-	l.l(l.CRITICAL,"Because we did a chroot link,")
-	l.l(l.CRITICAL," we need to abort here.")
-	l.l(l.CRITICAL," chroots are one way.")
+	#l.l(l.CRITICAL,"Because we did a chroot link,")
+	#l.l(l.CRITICAL," we need to abort here.")
+	#l.l(l.CRITICAL," chroots are one way.")
 	sys.exit(0)
 
 if options.unlink:
@@ -130,7 +130,7 @@ if options.unlink:
 # with processing after this point.
 
 if Syn.reg.CHROOT_TOUCHED:
-	l.l(l.CRITICAL,"Because we did a chroot unlink,")
-	l.l(l.CRITICAL," we need to abort here.")
-	l.l(l.CRITICAL," chroots are one way.")
+	#l.l(l.CRITICAL,"Because we did a chroot unlink,")
+	#l.l(l.CRITICAL," we need to abort here.")
+	#l.l(l.CRITICAL," chroots are one way.")
 	sys.exit(0)

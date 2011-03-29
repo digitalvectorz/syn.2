@@ -2,10 +2,12 @@
 
 set -e
 
+PREFIX="syn"
+
 pkg=`syn-dev -f package`
 ver=`syn-dev -f version`
 loc=`syn-dev -f local`
-tag="$ver/$loc"
+tag="$PREFIX/$ver/$loc"
 
 if [ "x$(git tag | grep $tag)" != "x" ]; then
 	echo "Tag already exists! Oh noes! Tweek the local :)"
