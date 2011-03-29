@@ -9,6 +9,7 @@ from optparse import OptionParser
 import Syn.Global as g
 import Syn.log as l
 import Syn.s   as syn
+import Syn.policy
 import Syn.errors
 import Syn.synlint
 import Syn.bundle
@@ -30,12 +31,17 @@ parser.add_option( "-r", "--roll",    dest = "roll",    help = "Roll out a sourc
 
 parser.add_option( "-o", "--loud",    dest = "verbose", help = "Make the app whine",
 	action = "store_true", default = False)
+parser.add_option( "-p", "--policy",  dest = "policy",  help = "Check the current policy version",
+	action = "store_true", default = False)
 
 
 (options, args) = parser.parse_args()
 
 if options.verbose:
 	Syn.log.VERBOSITY = Syn.log.PEDANTIC
+
+if options.policy:
+	print Syn.policy.POLICY_VERSION
 
 def setAttr(meta, string):
 	try:
