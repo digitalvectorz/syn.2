@@ -114,7 +114,7 @@ def strapDB():
 	ron = {}
 	pickle.dump(ron,  open(Syn.reg.CHROOT + g.SYNDB, 'wb'))
 	pickle.dump(True, open(Syn.reg.CHROOT + g.LOCKF, 'wb'))
-	pickle.dump(ron,  open(Syn.reg.CHROOT + g.CLAIM, 'wb'))
+
 	Syn.log.l(Syn.log.PEDANTIC, "Database nuked")
 def aquireLock():
 	Syn.log.l(Syn.log.PEDANTIC, "Snagging lock")

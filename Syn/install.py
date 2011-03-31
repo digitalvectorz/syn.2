@@ -62,3 +62,30 @@ def installArchive(ar):
 
 	db.setState(pkg,ver,Syn.db.INSTALLED)
 	db.sync()
+
+def uninstallArchive(pkg, ver):
+	db = Syn.db.loadCanonicalDB()
+	try:
+		state = db.queryState(pkg, ver)
+		if state['status'] != Syn.db.INSTALLED:
+			raise Syn.errors.PackageUninstalledException("Package is not installed")
+		l.l(l.LOG,"Package is installed. Phew.")
+	except Syn.errors.PackageNotFoundException as e:
+		l.l(l.LOG,"Package not found. Crap")
+		raise e
+
+	l.l(l.LOG,"Moving on with the package uninstall")
+
+	# XXX: Someone fix below this, please.
+	#      use Syn.fspkg.fspkg()
+
+	c.cd(Syn.reg.CHROOT + g.INSTALL_ROOT_PATH)
+	c.cd(pkg)
+
+	db.setState(pkg,ver,Syn.db.HALF_INSTALLED)
+	db.sync()
+
+	c.rmdir(ver)
+
+	db.setState(pkg,ver,Syn.db.UNINSTALLED)
+	db.sync()
