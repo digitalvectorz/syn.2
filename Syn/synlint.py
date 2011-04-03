@@ -50,6 +50,11 @@ def sourceCheck( ar ):
 	r_errs =  checkFields(Syn.policy.META_REQUIRED,   metafile, policy)
 	n_errs =  checkFields(Syn.policy.META_NEEDED,     metafile, policy)
 	g_errs =  checkFields(Syn.policy.META_GOODTOHAVE, metafile, policy)
+
+	#if policy >= Syn.policy.META_REQUIRED["section"]:
+	#	section = metafile["section"]
+	#	Syn.policy.SECTION_REQUIRED[section]
+
 	n_errs += checkVersion(metafile)
 	return ( r_errs, n_errs, g_errs )
 

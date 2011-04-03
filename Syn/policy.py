@@ -3,7 +3,7 @@
 # GNU GPL-3+, 2011
 #
 
-POLICY_VERSION = 3
+POLICY_VERSION = 4
 
 META_REQUIRED = {
 	"package"     : 1,
@@ -15,7 +15,14 @@ META_REQUIRED = {
 	"multipkg"    : 3,
 	"local"       : 2,
 	"policy"      : 2,
-	"maintainer"  : 1
+	"maintainer"  : 1,
+	"section"     : 4
+}
+
+SECTION_REQUIRED = {
+	"lib" : {
+		"major-id" : 4
+	}
 }
 
 META_NEEDED = {
@@ -256,6 +263,27 @@ This field is the location of the upstream Version Control system.
  Policy Version: 1
 
  This field should be in the same format as the `vcs' attribute. 
+""",
+	"section"             :
+"""
+This field is what tells Syn what kind of package this is.
+ Policy Version: 4
+
+ This field is to dictate what secondary checks need to be run against
+ the package. For instance, if we are packaging a Libaray, we need to verify
+ we have things like the major library ID. Check documentation for the
+ right section to file the package against. Here are the common ones:
+
+ lib:
+   Library, any package that provides a .so file for use outside it's
+   own application / binaries.
+
+ graphical:
+   Any application that requires a graphical server.
+
+ binary:
+   Most packages will be over in this package. It's pretty awesome. CLI apps
+   fall under this group -- most packages are binary.
 """,
 	"upstream-bugtracker" :
 """
