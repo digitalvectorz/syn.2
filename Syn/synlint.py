@@ -51,9 +51,20 @@ def sourceCheck( ar ):
 	n_errs =  checkFields(Syn.policy.META_NEEDED,     metafile, policy)
 	g_errs =  checkFields(Syn.policy.META_GOODTOHAVE, metafile, policy)
 
-	#if policy >= Syn.policy.META_REQUIRED["section"]:
-	#	section = metafile["section"]
-	#	Syn.policy.SECTION_REQUIRED[section]
+	if policy >= Syn.policy.META_REQUIRED["section"]:
+		section = metafile["section"]
+		try:
+			section_flags = Syn.policy.SECTION_REQUIRED[section]
+			r_errs += checkFields( section_flags, metafile, policy)
+		except KeyError as e:
+			l.l(l.MESSAGE,"")
+			l.l(l.MESSAGE,"=== Potential issue! ===")
+			l.l(l.MESSAGE,"No section checks on `" + section + "'")
+			l.l(l.MESSAGE," Either this is brand new and no checks")
+			l.l(l.MESSAGE," have been written, or this is a shitty")
+			l.l(l.MESSAGE," section.")
+			l.l(l.MESSAGE,"")
+			
 
 	n_errs += checkVersion(metafile)
 	return ( r_errs, n_errs, g_errs )
