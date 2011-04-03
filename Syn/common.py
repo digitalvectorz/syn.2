@@ -4,6 +4,7 @@
 #
 import Syn.Global as g
 import Syn.log
+import distutils.version
 
 import tarfile
 import os.path
@@ -19,6 +20,12 @@ def processFullID(identifier):
 		return [ package_id, version_id ]
 	except ValueError:
 		return [ identifier, None ]
+
+def verComp(vid1, vid2):
+	#XXX: Fix this, please.
+	v1 = distutils.version.LooseVersion(vid1)
+	v2 = distutils.version.LooseVersion(vid2)
+	return v1.__cmp__(v2)
 
 def isRoot():
 	uID = os.geteuid()
