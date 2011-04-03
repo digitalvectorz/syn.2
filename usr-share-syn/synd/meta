@@ -4,6 +4,8 @@
         "name"   : "John Q. Hacker"
     }, 
 
+    "section" : "unknown",
+
     "multipkg" : {
         "*"              : "pkg-base",
         "/usr/bin/*"     : "bins",
@@ -35,7 +37,7 @@
     },
 
     "local"  : 1,
-    "policy" : 3,
+    "policy" : 4,
 
     "build-deps" : [
     ],
