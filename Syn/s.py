@@ -81,7 +81,12 @@ def genLibraryLinks(ar):
 		fpath = f[1:] # remove the .
 		(bin,local) = Syn.common.isInPath(fpath)
 		if bin:
+			l.l(l.PEDANTIC, f)
 			(status, spew) = Syn.s.run("syn-ldd " + f)
+			l.l(l.PEDANTIC, " S-> " + spew)
+			if status != 0:
+				spew = "[]" #default to nil
+
 			lds[fpath] = json.loads(spew)
 
 	Syn.common.cd(wd)
