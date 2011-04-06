@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -d "../synd/patches/" ]; then
+	echo "[sh_patch] Found patch directory."
+else
+	echo "[sh_patch] No patch directory."
+	exit 0
+fi
 
 for x in `ls ../synd/patches/*`; do
 
