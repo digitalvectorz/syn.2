@@ -1,7 +1,0 @@
-#!/bin/bash
-
-vcs=`syn-dev -f  upstream-vcs.browse`
-bugs=`syn-dev -f upstream-bugtracker`
-
-sensible-browser $vcs
-sensible-browser $bugs
