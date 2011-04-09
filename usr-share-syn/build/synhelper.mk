@@ -7,7 +7,10 @@ configure::
 ifdef PATCH_SOURCE
 	sh_patch
 endif
-	$(CONFIGURE) $(CONFIG_FLAGS)
+ifdef CFLAGS
+	CONF_PREFIX=$(C_PREFIX) CFLAGS=$(CFLAGS)
+endif
+	$(CONF_PREFIX) $(CONFIGURE) $(CONFIG_FLAGS)
 
 build::
 	$(BUILD) $(BUILD_FLAGS)
