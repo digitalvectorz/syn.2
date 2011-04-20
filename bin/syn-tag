@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e
+
+PREFIX="syn"
+
+pkg=`syn-dev -f package`
+ver=`syn-dev -f version`
+loc=`syn-dev -f local`
+tag="$PREFIX/$ver/$loc"
+
+if [ "x$(git tag | grep $tag)" != "x" ]; then
+	echo "Tag already exists! Oh noes! Tweek the local :)"
+	exit 1
+fi
+
+echo "Tagging as: $tag"
+
+email=`syn-dev -f maintainer.email`
+name=`syn-dev -f  maintainer.name`
+
+fullname="$name <$email>"
+echo "Upload prepared by: $fullname"
+
+tarball=$(basename $(syn-dev -f download))
+
+fullid="$pkg-$ver"
+
+syn-dev -or
+syn-dev -ob ../$fullid.syn.tar.gz
+
+echo "Syn $tag release." > .syn-message
+echo "" >> .syn-message
+echo "Package prepared by:" >> .syn-message
+echo " $fullname" >> .syn-message
+
+git tag -a $tag -F .syn-message
+pristine-tar commit $tarball $tag
+
+rm .syn-message
+
+git push
+git push --tags
+git push --all
