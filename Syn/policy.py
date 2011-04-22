@@ -285,6 +285,19 @@ This field is what tells Syn what kind of package this is.
    Most packages will be over in this package. It's pretty awesome. CLI apps
    fall under this group -- most packages are binary.
 """,
+	"major-id"             :
+"""
+This field lets syn know what version the ABI is at.
+ Policy Version: 4
+
+ This field lets us declare version IDs in a clean way. Let's say
+ we have package `libfoo' major ID of 1. We then must create:
+
+  libfoo.so.1
+
+ so that if it's package number is 1.2 or 1.3, upgrade paths are
+ handled with grace.
+""",
 	"upstream-bugtracker" :
 """
 This field is the homepage location of the upstream bugtracker.
