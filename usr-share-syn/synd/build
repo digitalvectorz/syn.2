@@ -11,6 +11,12 @@ STRIP_SOURCE=1
 # this. Don't worry about strip-all,
 # this won't fsck up libs. 
 
+# BUILD_CHECK=1
+# This here marks that we will run the
+# test suits against the package during build.
+# this is a good thing(tm) for packages that
+# support it (and have sane tests).
+
 include /usr/share/syn/build/synhelper.mk
 # This provides our
 #  - configure
