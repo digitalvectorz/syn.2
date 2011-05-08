@@ -6,6 +6,7 @@
 import Syn.Global as g
 
 import Syn.verification
+import Syn.package
 import Syn.common
 import Syn.errors
 import Syn.log
